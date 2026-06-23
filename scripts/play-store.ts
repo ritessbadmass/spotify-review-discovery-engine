@@ -1,7 +1,7 @@
 import gplay from 'google-play-scraper';
 import { SourceItem, delay, hashPseudonym, matchesDiscoveryKeywords, cleanText, saveToCsv } from './utils';
 
-const MAX_REVIEWS = 300;
+const MAX_REVIEWS = 2000;
 const BATCH_SIZE = 100;
 const TARGET_APP = 'com.spotify.music';
 

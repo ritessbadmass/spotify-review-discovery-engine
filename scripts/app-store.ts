@@ -18,7 +18,7 @@ async function fetchAppStoreReviews() {
         id: TARGET_APP_ID,
         country: 'us',
         page: page,
-        sort: store.sort.RECENT
+        sort: store.sort.HELPFUL
       });
 
       if (!reviews || reviews.length === 0) {
