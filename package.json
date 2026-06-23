@@ -1,0 +1,36 @@
+{
+  "name": "spotify-review-discovery-engine",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "eslint",
+    "scrape:play": "tsx scripts/play-store.ts",
+    "scrape:appstore": "tsx scripts/app-store.ts",
+    "scrape:reddit": "tsx scripts/reddit.ts",
+    "scrape:all": "tsx scripts/play-store.ts && tsx scripts/app-store.ts && tsx scripts/reddit.ts && tsx scripts/merge.ts"
+  },
+  "dependencies": {
+    "@google/genai": "^2.9.0",
+    "app-store-scraper": "^0.18.0",
+    "dotenv": "^17.4.2",
+    "google-play-scraper": "^10.1.3",
+    "next": "16.2.9",
+    "papaparse": "^5.5.4",
+    "react": "19.2.4",
+    "react-dom": "19.2.4",
+    "snoowrap": "^1.23.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20",
+    "@types/papaparse": "^5.5.2",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "@types/snoowrap": "^1.16.1",
+    "eslint": "^9",
+    "eslint-config-next": "16.2.9",
+    "tsx": "^4.22.4",
+    "typescript": "^5"
+  }
+}

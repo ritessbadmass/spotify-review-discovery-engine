@@ -1,0 +1,161 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+:root {
+  /* Spotify Inspired Premium Color Palette */
+  --spotify-green: #1DB954;
+  --spotify-green-hover: #1ed760;
+  
+  --bg-dark: #000000;
+  --bg-elevated: #121212;
+  --bg-highlight: #1a1a1a;
+  --bg-card: #181818;
+  --bg-card-hover: #282828;
+  
+  --text-base: #b3b3b3;
+  --text-highlight: #ffffff;
+  --text-subdued: #a7a7a7;
+  
+  --border-color: rgba(255, 255, 255, 0.1);
+  --glass-bg: rgba(24, 24, 24, 0.6);
+  
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-lg: 16px;
+  --radius-full: 9999px;
+  
+  --transition-fast: 0.2s ease;
+  --transition-normal: 0.3s ease;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background-color: var(--bg-dark);
+  color: var(--text-base);
+  font-family: 'Inter', sans-serif;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  color: var(--text-highlight);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+a {
+  color: var(--text-highlight);
+  text-decoration: none;
+  transition: color var(--transition-fast);
+}
+
+a:hover {
+  color: var(--spotify-green);
+}
+
+/* Glassmorphism & Card Utilities */
+.glass-panel {
+  background: var(--glass-bg);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-lg);
+}
+
+.card {
+  background-color: var(--bg-card);
+  border-radius: var(--radius-md);
+  padding: 24px;
+  transition: background-color var(--transition-fast), transform var(--transition-fast);
+}
+
+.card:hover {
+  background-color: var(--bg-card-hover);
+}
+
+/* Buttons */
+.btn-primary {
+  background-color: var(--spotify-green);
+  color: #000;
+  border: none;
+  border-radius: var(--radius-full);
+  padding: 12px 32px;
+  font-weight: 700;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background-color var(--transition-fast), transform 0.1s ease;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.btn-primary:hover {
+  background-color: var(--spotify-green-hover);
+  transform: scale(1.04);
+}
+
+.btn-primary:active {
+  transform: scale(1);
+}
+
+.btn-secondary {
+  background-color: transparent;
+  color: var(--text-highlight);
+  border: 1px solid var(--text-subdued);
+  border-radius: var(--radius-full);
+  padding: 12px 32px;
+  font-weight: 700;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.btn-secondary:hover {
+  border-color: var(--text-highlight);
+  transform: scale(1.04);
+}
+
+/* Form Elements */
+input, textarea, select {
+  background-color: var(--bg-elevated);
+  border: 1px solid var(--border-color);
+  color: var(--text-highlight);
+  padding: 12px 16px;
+  border-radius: var(--radius-sm);
+  font-family: inherit;
+  font-size: 14px;
+  transition: border-color var(--transition-fast);
+  width: 100%;
+}
+
+input:focus, textarea:focus, select:focus {
+  outline: none;
+  border-color: var(--text-subdued);
+}
+
+/* Micro animations */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.4s ease-out forwards;
+}
+
+/* Layout Utilities */
+.app-container {
+  display: flex;
+  min-height: 100vh;
+}
+
+.main-content {
+  flex: 1;
+  padding: 32px;
+  background: linear-gradient(180deg, var(--bg-elevated) 0%, var(--bg-dark) 100%);
+  overflow-y: auto;
+}
