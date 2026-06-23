@@ -6,7 +6,8 @@ import { fetchExistingItems, bulkIngest } from '@/lib/api';
 import { SourceType, SourceItem, DraftSourceItem } from '@/lib/types';
 import { cleanText, detectLanguage, flagDuplicates } from '@/lib/ingestUtils';
 
-const SOURCE_TYPES: { id: SourceType; label: string; icon: string }[] = [
+const SOURCE_TYPES: { id: SourceType | 'mixed_csv'; label: string; icon: string }[] = [
+  { id: 'mixed_csv', label: 'Mixed / Scraped CSV', icon: '📁' },
   { id: 'app_store', label: 'App Store', icon: '📱' },
   { id: 'play_store', label: 'Play Store', icon: '▶️' },
   { id: 'reddit', label: 'Reddit Threads', icon: '🤖' },
@@ -23,10 +24,10 @@ const PRESET_DATA = [
 
 export default function IngestWizardPage() {
   const [step, setStep] = useState<number>(1);
-  const [sourceType, setSourceType] = useState<SourceType | null>(null);
+  const [sourceType, setSourceType] = useState<SourceType | 'mixed_csv' | null>(null);
   
   // Step 2 State
-  const [inputMode, setInputMode] = useState<'paste' | 'upload'>('paste');
+  const [inputMode, setInputMode] = useState<'paste' | 'upload'>('upload');
   const [pasteText, setPasteText] = useState('');
   
   // Step 3 State
@@ -42,7 +43,12 @@ export default function IngestWizardPage() {
   }, []);
 
   const handleNextStep1 = () => {
-    if (sourceType) setStep(2);
+    if (sourceType) {
+      if (sourceType === 'mixed_csv') {
+        setInputMode('upload');
+      }
+      setStep(2);
+    }
   };
 
   const handleProcessInput = () => {
@@ -59,7 +65,7 @@ export default function IngestWizardPage() {
       const normalizedText = cleanText(rawText);
       return {
         id: `draft-${Date.now()}-${idx}`,
-        sourceType: sourceType!,
+        sourceType: (sourceType === 'mixed_csv' ? 'forum' : sourceType) as SourceType,
         sourceUrl: item.sourceUrl || '',
         author: item.author || 'Anonymous',
         date: item.date || new Date().toISOString().split('T')[0],
@@ -91,7 +97,7 @@ export default function IngestWizardPage() {
           const normalizedText = cleanText(rawText);
           return {
             id: `draft-${Date.now()}-${idx}`,
-            sourceType: (row.sourceType as SourceType) || sourceType!,
+            sourceType: (row.sourceType as SourceType) || (sourceType === 'mixed_csv' ? 'forum' : sourceType!),
             sourceUrl: row.sourceUrl || '',
             author: row.author || 'Anonymous',
             date: row.date || new Date().toISOString().split('T')[0],
@@ -191,12 +197,14 @@ export default function IngestWizardPage() {
           <h2 style={{ fontSize: '18px', marginBottom: '24px' }}>2. Input Data</h2>
           
           <div style={{ display: 'flex', gap: '16px', marginBottom: '24px' }}>
-            <button 
-              className={inputMode === 'paste' ? 'btn-primary' : 'btn-secondary'} 
-              onClick={() => setInputMode('paste')}
-            >
-              Paste Text
-            </button>
+            {sourceType !== 'mixed_csv' && (
+              <button 
+                className={inputMode === 'paste' ? 'btn-primary' : 'btn-secondary'} 
+                onClick={() => setInputMode('paste')}
+              >
+                Paste Text
+              </button>
+            )}
             <button 
               className={inputMode === 'upload' ? 'btn-primary' : 'btn-secondary'} 
               onClick={() => setInputMode('upload')}
@@ -205,7 +213,7 @@ export default function IngestWizardPage() {
             </button>
           </div>
 
-          {inputMode === 'paste' ? (
+          {inputMode === 'paste' && sourceType !== 'mixed_csv' ? (
             <div>
               <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '8px' }}>
                 <label style={{ fontWeight: 600 }}>Raw Reviews (One per line)</label>
