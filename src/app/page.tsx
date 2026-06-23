@@ -1,8 +1,19 @@
+'use client';
+
+import { useEffect, useState } from 'react';
 import DashboardCard from '@/components/DashboardCard';
 import { getDashboardStats } from '@/lib/api';
 
-export default async function DashboardPage() {
-  const stats = await getDashboardStats();
+export default function DashboardPage() {
+  const [stats, setStats] = useState<any>(null);
+
+  useEffect(() => {
+    getDashboardStats().then(setStats);
+  }, []);
+
+  if (!stats) {
+    return <div style={{ padding: '40px', textAlign: 'center', color: 'var(--text-subdued)' }}>Loading dashboard statistics...</div>;
+  }
 
   return (
     <div className="animate-fade-in">
@@ -78,7 +89,7 @@ export default async function DashboardPage() {
           <div>
             <h3 style={{ fontSize: '12px', textTransform: 'uppercase', color: 'var(--text-subdued)', marginBottom: '8px' }}>Ingestion Sources</h3>
             <div style={{ fontSize: '14px', display: 'flex', flexDirection: 'column', gap: '4px' }}>
-              {Object.entries(stats.provenance.sources).map(([src, count]) => (
+              {Object.entries(stats.provenance.sources).map(([src, count]: [string, any]) => (
                 <div key={src}><span style={{ display: 'inline-block', width: '100px' }}>{src.replace('_', ' ')}:</span> <strong>{count}</strong></div>
               ))}
             </div>
