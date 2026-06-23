@@ -191,7 +191,7 @@ export async function ingestText(text: string): Promise<AnalysisResult> {
   return await analyzeItem(tempItem);
 }
 
-export async function bulkIngest(newItems: SourceItem[]): Promise<void> {
+export async function bulkIngest(newItems: SourceItem[], onProgress?: (done: number, total: number) => void): Promise<void> {
   if (typeof window !== 'undefined') {
     const existing = getStoredItems();
     const merged = [...newItems, ...existing];
@@ -202,6 +202,7 @@ export async function bulkIngest(newItems: SourceItem[]): Promise<void> {
     // Process in batches
     const batchSize = 3;
     for (let i = 0; i < newItems.length; i += batchSize) {
+      if (onProgress) onProgress(i, newItems.length);
       const batch = newItems.slice(i, i + batchSize);
       const results = await processBatchAPI(batch);
       for (const res of results) {
@@ -209,6 +210,7 @@ export async function bulkIngest(newItems: SourceItem[]): Promise<void> {
       }
       if (i + batchSize < newItems.length) await delay(1000);
     }
+    if (onProgress) onProgress(newItems.length, newItems.length);
     
     saveStoredAnalysis(analysisMap);
   }

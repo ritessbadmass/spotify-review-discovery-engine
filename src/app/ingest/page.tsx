@@ -118,15 +118,18 @@ export default function IngestWizardPage() {
     setDraftItems(prev => prev.filter(i => i.id !== id));
   };
 
+  const [importProgress, setImportProgress] = useState<string | null>(null);
+
   const handleConfirmImport = async () => {
     setIsImporting(true);
+    setImportProgress('0%');
     
     const validItems = draftItems.filter(i => !i.isDuplicate);
-    
-    // Convert DraftSourceItem back to SourceItem (drop isDuplicate flag if desired, but we can just cast)
     const itemsToImport = validItems.map(({ isDuplicate, ...rest }) => rest) as SourceItem[];
     
-    await bulkIngest(itemsToImport);
+    await bulkIngest(itemsToImport, (done, total) => {
+      setImportProgress(`${Math.round((done / total) * 100)}%`);
+    });
     
     setImportStats({
       totalImported: itemsToImport.length,
@@ -137,6 +140,7 @@ export default function IngestWizardPage() {
     });
     
     setIsImporting(false);
+    setImportProgress(null);
     setStep(4);
   };
 
@@ -321,7 +325,7 @@ export default function IngestWizardPage() {
               onClick={handleConfirmImport} 
               disabled={isImporting || draftItems.filter(i => !i.isDuplicate).length === 0}
             >
-              {isImporting ? 'Importing...' : 'Confirm Import'}
+              {isImporting ? `Importing... ${importProgress}` : 'Confirm Import'}
             </button>
           </div>
         </div>
