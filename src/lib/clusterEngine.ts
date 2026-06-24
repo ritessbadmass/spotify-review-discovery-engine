@@ -53,8 +53,8 @@ export function generateClusters(items: SourceItem[], analysisMap: Record<string
     });
 
     // Unique segments and problem types
-    const segments = Array.from(new Set(data.results.map(r => r.likelySegment)));
-    const problems = Array.from(new Set(data.results.map(r => r.discoveryProblemType)));
+    const segments = Array.from(new Set(data.results.map(r => r.likelySegment || 'Unknown')));
+    const problems = Array.from(new Set(data.results.map(r => r.discoveryProblemType || 'Unknown')));
 
     // Deterministic labels based on key
     let label = 'Algorithm Stagnation';

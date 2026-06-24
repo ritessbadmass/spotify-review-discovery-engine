@@ -100,34 +100,39 @@ async function processBatchAPI(items: SourceItem[]): Promise<AnalysisResult[]> {
   }
 
   // Fallback to local mock if not live or if API fails
-  const results: AnalysisResult[] = [];
-  for (const item of items) {
-    results.push(await analyzeItem(item));
-  }
+  const results: AnalysisResult[] = await Promise.all(items.map(item => analyzeItem(item)));
   return results.map(r => ({ ...r, provenance: { status: 'mock' } as any }));
 }
+
+let seedAnalysisPromise: Promise<void> | null = null;
 
 // Ensure seeded items have analysis on first load
 async function ensureSeedAnalysis() {
   if (typeof window === 'undefined') return;
-  const analysisMap = await getStoredAnalysis();
-  
-  const missingItems = mockSourceItems.filter(item => !analysisMap[item.id]);
-  
-  if (missingItems.length > 0) {
-    // Process missing items in batches
-    const batchSize = 3;
-    for (let i = 0; i < missingItems.length; i += batchSize) {
-      const batch = missingItems.slice(i, i + batchSize);
-      const results = await processBatchAPI(batch);
-      for (const res of results) {
-        analysisMap[res.sourceItemId] = res;
+  if (seedAnalysisPromise) return seedAnalysisPromise;
+
+  seedAnalysisPromise = (async () => {
+    const analysisMap = await getStoredAnalysis();
+    
+    const missingItems = mockSourceItems.filter(item => !analysisMap[item.id]);
+    
+    if (missingItems.length > 0) {
+      // Process missing items in batches
+      const batchSize = 3;
+      for (let i = 0; i < missingItems.length; i += batchSize) {
+        const batch = missingItems.slice(i, i + batchSize);
+        const results = await processBatchAPI(batch);
+        for (const res of results) {
+          analysisMap[res.sourceItemId] = res;
+        }
+        // Add a small delay between batches
+        if (i + batchSize < missingItems.length) await delay(1000);
       }
-      // Add a small delay between batches
-      if (i + batchSize < missingItems.length) await delay(1000);
+      await saveStoredAnalysis(analysisMap);
     }
-    await saveStoredAnalysis(analysisMap);
-  }
+  })();
+
+  return seedAnalysisPromise;
 }
 
 export async function getDashboardStats() {

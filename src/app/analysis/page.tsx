@@ -229,7 +229,7 @@ export default function AnalysisPage() {
                       fontSize: '13px',
                       margin: 0
                     }}>
-                      "{quote}"
+                      &quot;{quote}&quot;
                     </blockquote>
                   ))}
                 </div>
@@ -258,7 +258,7 @@ export default function AnalysisPage() {
                       <tbody>
                         {evidenceItems.map(item => (
                           <tr key={item.id} style={{ borderBottom: '1px solid var(--border-color)' }}>
-                            <td style={{ padding: '8px', color: 'var(--text-subdued)' }}>{item.sourceType.replace('_', ' ')}</td>
+                            <td style={{ padding: '8px', color: 'var(--text-subdued)' }}>{(item.sourceType || 'unknown').replace(/_/g, ' ')}</td>
                             <td style={{ padding: '8px', lineHeight: 1.5 }}>{item.rawText}</td>
                           </tr>
                         ))}
