@@ -7,12 +7,7 @@ import { SourceType, SourceItem, DraftSourceItem } from '@/lib/types';
 import { cleanText, detectLanguage, flagDuplicates } from '@/lib/ingestUtils';
 
 const SOURCE_TYPES: { id: SourceType | 'mixed_csv'; label: string; icon: string }[] = [
-  { id: 'mixed_csv', label: 'Mixed / Scraped CSV', icon: '📁' },
-  { id: 'app_store', label: 'App Store', icon: '📱' },
-  { id: 'play_store', label: 'Play Store', icon: '▶️' },
-  { id: 'reddit', label: 'Reddit Threads', icon: '🤖' },
-  { id: 'forum', label: 'Community Forums', icon: '💬' },
-  { id: 'social', label: 'Social Posts', icon: '🐦' },
+  { id: 'mixed_csv', label: 'Scraped CSV Upload', icon: '📁' },
 ];
 
 const PRESET_DATA = [
