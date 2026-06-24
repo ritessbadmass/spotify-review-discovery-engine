@@ -5,29 +5,78 @@ import { generateClusters, generateSynthesis } from './clusterEngine';
 
 const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
 
-// Manage mock data via localStorage in browser to persist across reloads
-function getStoredItems(): SourceItem[] {
+let cachedItems: SourceItem[] | null = null;
+let cachedAnalysis: Record<string, AnalysisResult> | null = null;
+
+// Manage data via Vercel KV DB, with fallback to localStorage
+async function getStoredItems(): Promise<SourceItem[]> {
+  if (cachedItems) return cachedItems;
   if (typeof window === 'undefined') return mockSourceItems;
+  
+  try {
+    const res = await fetch('/api/db');
+    if (res.ok) {
+      const data = await res.json();
+      if (data.items) {
+        cachedItems = data.items;
+        return data.items;
+      }
+    }
+  } catch (err) {
+    console.error('Failed to fetch items from DB', err);
+  }
+
   const stored = localStorage.getItem('spotify_mock_items');
   if (stored) {
-    try { return JSON.parse(stored); } catch (e) { console.error(e); }
+    try { 
+      const parsed = JSON.parse(stored);
+      cachedItems = parsed;
+      return parsed;
+    } catch (e) { console.error(e); }
   }
   localStorage.setItem('spotify_mock_items', JSON.stringify(mockSourceItems));
   return mockSourceItems;
 }
 
-function getStoredAnalysis(): Record<string, AnalysisResult> {
+async function getStoredAnalysis(): Promise<Record<string, AnalysisResult>> {
+  if (cachedAnalysis) return cachedAnalysis;
   if (typeof window === 'undefined') return {};
+  
+  try {
+    const res = await fetch('/api/db');
+    if (res.ok) {
+      const data = await res.json();
+      if (data.analysis) {
+        cachedAnalysis = data.analysis;
+        return data.analysis;
+      }
+    }
+  } catch (err) {
+    console.error('Failed to fetch analysis from DB', err);
+  }
+
   const stored = localStorage.getItem('spotify_mock_analysis');
   if (stored) {
-    try { return JSON.parse(stored); } catch (e) { console.error(e); }
+    try { 
+      const parsed = JSON.parse(stored);
+      cachedAnalysis = parsed;
+      return parsed; 
+    } catch (e) { console.error(e); }
   }
   return {};
 }
 
-function saveStoredAnalysis(map: Record<string, AnalysisResult>) {
+async function saveStoredAnalysis(map: Record<string, AnalysisResult>) {
+  cachedAnalysis = map;
   if (typeof window !== 'undefined') {
     localStorage.setItem('spotify_mock_analysis', JSON.stringify(map));
+    try {
+      fetch('/api/db', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ analysis: map })
+      });
+    } catch (e) {}
   }
 }
 
@@ -61,7 +110,7 @@ async function processBatchAPI(items: SourceItem[]): Promise<AnalysisResult[]> {
 // Ensure seeded items have analysis on first load
 async function ensureSeedAnalysis() {
   if (typeof window === 'undefined') return;
-  const analysisMap = getStoredAnalysis();
+  const analysisMap = await getStoredAnalysis();
   
   const missingItems = mockSourceItems.filter(item => !analysisMap[item.id]);
   
@@ -77,15 +126,15 @@ async function ensureSeedAnalysis() {
       // Add a small delay between batches
       if (i + batchSize < missingItems.length) await delay(1000);
     }
-    saveStoredAnalysis(analysisMap);
+    await saveStoredAnalysis(analysisMap);
   }
 }
 
 export async function getDashboardStats() {
   await ensureSeedAnalysis();
   await delay(800);
-  const items = getStoredItems();
-  const analysisMap = getStoredAnalysis();
+  const items = await getStoredItems();
+  const analysisMap = await getStoredAnalysis();
   const totalReviews = items.length;
   
   const results = items.map(i => analysisMap[i.id]).filter(Boolean);
@@ -124,8 +173,8 @@ export async function getDashboardStats() {
 export async function getReviews(): Promise<(SourceItem & { analysis?: AnalysisResult })[]> {
   await ensureSeedAnalysis();
   await delay(1000);
-  const items = getStoredItems();
-  const analysisMap = getStoredAnalysis();
+  const items = await getStoredItems();
+  const analysisMap = await getStoredAnalysis();
   return items.map(item => ({
     ...item,
     analysis: analysisMap[item.id]
@@ -134,10 +183,10 @@ export async function getReviews(): Promise<(SourceItem & { analysis?: AnalysisR
 
 export async function getReviewById(id: string): Promise<(SourceItem & { analysis?: AnalysisResult }) | null> {
   await delay(500);
-  const items = getStoredItems();
+  const items = await getStoredItems();
   const item = items.find(i => i.id === id);
   if (!item) return null;
-  const analysisMap = getStoredAnalysis();
+  const analysisMap = await getStoredAnalysis();
   return {
     ...item,
     analysis: analysisMap[id]
@@ -146,8 +195,8 @@ export async function getReviewById(id: string): Promise<(SourceItem & { analysi
 
 export async function getInsightClusters(): Promise<InsightCluster[]> {
   await ensureSeedAnalysis();
-  const items = getStoredItems();
-  const analysisMap = getStoredAnalysis();
+  const items = await getStoredItems();
+  const analysisMap = await getStoredAnalysis();
   
   const mode = process.env.NEXT_PUBLIC_ANALYSIS_MODE || 'mock';
   if (mode === 'live') {
@@ -193,11 +242,22 @@ export async function ingestText(text: string): Promise<AnalysisResult> {
 
 export async function bulkIngest(newItems: SourceItem[], onProgress?: (done: number, total: number) => void): Promise<void> {
   if (typeof window !== 'undefined') {
-    const existing = getStoredItems();
+    const existing = await getStoredItems();
     const merged = [...newItems, ...existing];
+    
+    cachedItems = merged;
     localStorage.setItem('spotify_mock_items', JSON.stringify(merged));
+    
+    // Sync items to DB in background
+    try {
+      fetch('/api/db', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ items: merged })
+      });
+    } catch (e) {}
 
-    const analysisMap = getStoredAnalysis();
+    const analysisMap = await getStoredAnalysis();
     
     // Process in batches
     const batchSize = 3;
@@ -212,14 +272,14 @@ export async function bulkIngest(newItems: SourceItem[], onProgress?: (done: num
     }
     if (onProgress) onProgress(newItems.length, newItems.length);
     
-    saveStoredAnalysis(analysisMap);
+    await saveStoredAnalysis(analysisMap);
   }
 }
 
 export async function reanalyzeItems(itemIds: string[]): Promise<void> {
   if (typeof window !== 'undefined') {
-    const items = getStoredItems();
-    const analysisMap = getStoredAnalysis();
+    const items = await getStoredItems();
+    const analysisMap = await getStoredAnalysis();
     
     const itemsToProcess = itemIds.map(id => items.find(i => i.id === id)).filter(Boolean) as SourceItem[];
     
@@ -233,10 +293,10 @@ export async function reanalyzeItems(itemIds: string[]): Promise<void> {
       if (i + batchSize < itemsToProcess.length) await delay(1000);
     }
     
-    saveStoredAnalysis(analysisMap);
+    await saveStoredAnalysis(analysisMap);
   }
 }
 
 export async function fetchExistingItems(): Promise<SourceItem[]> {
-  return getStoredItems();
+  return await getStoredItems();
 }

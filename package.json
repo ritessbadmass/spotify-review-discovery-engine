@@ -13,6 +13,7 @@
   },
   "dependencies": {
     "@google/genai": "^2.9.0",
+    "@upstash/redis": "^1.38.0",
     "app-store-scraper": "^0.18.0",
     "dotenv": "^17.4.2",
     "google-play-scraper": "^10.1.3",
