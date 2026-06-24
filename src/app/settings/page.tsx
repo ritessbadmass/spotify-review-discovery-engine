@@ -3,15 +3,35 @@
 import { useState } from 'react';
 
 export default function SettingsPage() {
-  const [llmProvider, setLlmProvider] = useState('openai');
-  const [apiKey, setApiKey] = useState('');
-  const [saved, setSaved] = useState(false);
+  const [synced, setSynced] = useState(false);
+  const [syncing, setSyncing] = useState(false);
 
-  const handleSave = (e: React.FormEvent) => {
-    e.preventDefault();
-    // Simulate saving
-    setSaved(true);
-    setTimeout(() => setSaved(false), 3000);
+  const handleSync = async () => {
+    setSyncing(true);
+    try {
+      const items = localStorage.getItem('spotify_mock_items');
+      const analysis = localStorage.getItem('spotify_mock_analysis');
+      
+      if (!items && !analysis) {
+        alert('No local data to sync!');
+        return;
+      }
+      
+      await fetch('/api/db', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ 
+          items: items ? JSON.parse(items) : null,
+          analysis: analysis ? JSON.parse(analysis) : null
+        })
+      });
+      setSynced(true);
+      setTimeout(() => setSynced(false), 3000);
+    } catch (e) {
+      alert('Sync failed!');
+    } finally {
+      setSyncing(false);
+    }
   };
 
   return (
@@ -24,12 +44,26 @@ export default function SettingsPage() {
       <div className="card glass-panel" style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
         <div>
           <h2 style={{ fontSize: '18px', marginBottom: '16px' }}>AI Provider Configuration</h2>
-          <p style={{ fontSize: '14px', color: 'var(--text-subdued)' }}>
+          <p style={{ fontSize: '14px', color: 'var(--text-subdued)', marginBottom: '16px' }}>
             This application is currently securely configured via server-side Environment Variables (Vercel). 
-            Your Gemini API Key is safely hidden from the browser. 
-            <br/><br/>
-            To switch back to Mock mode or change your API key, update the <code>NEXT_PUBLIC_ANALYSIS_MODE</code> or <code>GEMINI_API_KEY</code> environment variables in your Vercel Dashboard and redeploy.
+            Your Gemini API Key is safely hidden from the browser.
           </p>
+          <button 
+            onClick={handleSync}
+            disabled={syncing}
+            style={{
+              padding: '8px 16px',
+              borderRadius: '20px',
+              border: '1px solid #1DB954',
+              backgroundColor: synced ? '#1DB954' : 'transparent',
+              color: synced ? '#000' : '#1DB954',
+              cursor: 'pointer',
+              fontWeight: 600,
+              transition: 'all 0.2s'
+            }}
+          >
+            {syncing ? 'Syncing...' : synced ? '✓ Synced to Cloud' : 'Push Local Data to Cloud'}
+          </button>
         </div>
       </div>
 
