@@ -1,14 +1,17 @@
 import { GoogleGenAI, Type, Schema } from '@google/genai';
 import { AnalysisResult, SourceItem, InsightCluster, PMSynthesis } from './types';
 
-// Initialize the SDK ONLY on the server side
 let ai: GoogleGenAI | null = null;
-if (process.env.GEMINI_API_KEY) {
-  ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
+function getAI() {
+  if (!ai && process.env.GEMINI_API_KEY) {
+    ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
+  }
+  return ai;
 }
 
 export async function liveAnalyze(item: SourceItem): Promise<AnalysisResult> {
-  if (!ai) throw new Error('GEMINI_API_KEY is not configured');
+  const aiInstance = getAI();
+  if (!aiInstance) throw new Error('GEMINI_API_KEY is not configured');
 
   const schema: Schema = {
     type: Type.OBJECT,
@@ -61,7 +64,7 @@ Text: "${item.normalizedText}"
   `;
 
   try {
-    const response = await ai.models.generateContent({
+    const response = await aiInstance.models.generateContent({
       model: 'gemini-2.5-flash',
       contents: prompt,
       config: {
@@ -85,7 +88,8 @@ Text: "${item.normalizedText}"
 }
 
 export async function liveCluster(evidence: any[]): Promise<InsightCluster[]> {
-  if (!ai) throw new Error('GEMINI_API_KEY is not configured');
+  const aiInstance = getAI();
+  if (!aiInstance) throw new Error('GEMINI_API_KEY is not configured');
 
   const schema: Schema = {
     type: Type.ARRAY,
@@ -122,7 +126,7 @@ ${JSON.stringify(evidence, null, 2)}
   `;
 
   try {
-    const response = await ai.models.generateContent({
+    const response = await aiInstance.models.generateContent({
       model: 'gemini-2.5-flash',
       contents: prompt,
       config: {
@@ -141,7 +145,8 @@ ${JSON.stringify(evidence, null, 2)}
 }
 
 export async function askQuestion(question: string, context: InsightCluster[]): Promise<string> {
-  if (!ai) throw new Error('GEMINI_API_KEY is not configured');
+  const aiInstance = getAI();
+  if (!aiInstance) throw new Error('GEMINI_API_KEY is not configured');
 
   const prompt = `
 You are a highly analytical Product Manager AI assistant helping to interpret user feedback.
@@ -156,7 +161,7 @@ ${JSON.stringify(context, null, 2)}
   `;
 
   try {
-    const response = await ai.models.generateContent({
+    const response = await aiInstance.models.generateContent({
       model: 'gemini-2.5-flash',
       contents: prompt,
       config: {

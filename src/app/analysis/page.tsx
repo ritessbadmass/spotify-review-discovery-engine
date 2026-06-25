@@ -194,7 +194,7 @@ export default function AnalysisPage() {
 
       {/* Cluster Cards */}
       <h2 style={{ fontSize: '18px', marginBottom: '24px', borderBottom: '1px solid var(--border-color)', paddingBottom: '8px' }}>
-        Theme Clusters ({visibleClusters.length})
+        {activeQuery === null ? `Theme Clusters (${visibleClusters.length})` : `Supporting Evidence (${visibleClusters.length})`}
       </h2>
       
       <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
