@@ -25,6 +25,19 @@ export async function POST(request: Request) {
     return NextResponse.json(aiResponse);
   } catch (err: any) {
     console.error('Ask API Error:', err);
-    return NextResponse.json({ error: err.message || err.toString() || 'Internal Server Error' }, { status: 500 });
+    
+    const errorMessage = err.message || err.toString() || '';
+    
+    if (errorMessage.includes('429') || errorMessage.includes('quota') || errorMessage.includes('RESOURCE_EXHAUSTED')) {
+      return NextResponse.json({
+        answer: "It looks like your Gemini API key has hit its free-tier rate limit (Too Many Requests). Please wait a minute before trying again. In the meantime, here is a mock response so you can see how the UI works!",
+        evidence: [
+          "Mock Quote: 'The algorithm keeps playing the same 5 songs over and over.'",
+          "Mock Quote: 'I wish there was a way to reset my taste profile.'"
+        ]
+      });
+    }
+
+    return NextResponse.json({ error: errorMessage || 'Internal Server Error' }, { status: 500 });
   }
 }
