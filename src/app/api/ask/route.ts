@@ -12,15 +12,19 @@ export async function POST(request: Request) {
     if (!process.env.GEMINI_API_KEY) {
       // For mock environments without an API key, return a mock response
       return NextResponse.json({ 
-        answer: "Mock Answer: This is an AI generated response based on the analysis of the data and evidence supporting that answer. (GEMINI_API_KEY is not configured in this environment)" 
+        answer: "Mock Answer: This is an AI generated response based on the analysis of the data and evidence supporting that answer. (GEMINI_API_KEY is not configured in this environment)",
+        evidence: [
+          "Mock quote showing an example of user feedback.",
+          "Another mock quote indicating frustration."
+        ]
       });
     }
 
-    const answer = await askQuestion(question, context);
+    const aiResponse = await askQuestion(question, context);
     
-    return NextResponse.json({ answer });
+    return NextResponse.json(aiResponse);
   } catch (err: any) {
     console.error('Ask API Error:', err);
-    return NextResponse.json({ error: err.message || 'Internal Server Error' }, { status: 500 });
+    return NextResponse.json({ error: err.message || err.toString() || 'Internal Server Error' }, { status: 500 });
   }
 }

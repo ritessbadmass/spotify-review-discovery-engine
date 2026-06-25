@@ -12,7 +12,7 @@ export default function AnalysisPage() {
   const [isLoading, setIsLoading] = useState(true);
   const [activeQuery, setActiveQuery] = useState<string | null>(null);
   const [expandedClusterId, setExpandedClusterId] = useState<string | null>(null);
-  const [aiAnswer, setAiAnswer] = useState<string | null>(null);
+  const [aiAnswer, setAiAnswer] = useState<{ answer: string, evidence: string[] } | { error: string } | null>(null);
   const [isGeneratingAnswer, setIsGeneratingAnswer] = useState(false);
 
   const QUERIES = [
@@ -83,13 +83,14 @@ export default function AnalysisPage() {
       });
       if (res.ok) {
         const data = await res.json();
-        setAiAnswer(data.answer);
+        setAiAnswer(data);
       } else {
-        setAiAnswer("Failed to generate an answer. Please check the logs.");
+        const errData = await res.json().catch(() => ({}));
+        setAiAnswer({ error: `Failed to generate an answer. Server returned ${res.status}: ${errData.error || res.statusText}` });
       }
-    } catch (err) {
+    } catch (err: any) {
       console.error(err);
-      setAiAnswer("An error occurred while communicating with the AI.");
+      setAiAnswer({ error: `An error occurred while communicating with the AI: ${err.message}` });
     } finally {
       setIsGeneratingAnswer(false);
     }
@@ -178,26 +179,62 @@ export default function AnalysisPage() {
               <h3 style={{ fontSize: '16px', color: '#a482d8', marginBottom: '16px', display: 'flex', alignItems: 'center', gap: '8px' }}>
                 <span style={{ fontSize: '20px' }}>✨</span> AI Synthesis
               </h3>
-              <div style={{ 
-                color: 'var(--text-base)', 
-                lineHeight: 1.6, 
-                whiteSpace: 'pre-wrap', 
-                fontSize: '14px',
-                padding: '0 8px'
-              }}>
-                {aiAnswer}
-              </div>
+              
+              {'error' in aiAnswer ? (
+                <div style={{ color: 'var(--spotify-red)', fontWeight: 500, padding: '16px', backgroundColor: 'rgba(255, 75, 75, 0.1)', borderRadius: '8px' }}>
+                  {aiAnswer.error}
+                </div>
+              ) : (
+                <>
+                  <div style={{ 
+                    color: 'var(--text-base)', 
+                    lineHeight: 1.6, 
+                    whiteSpace: 'pre-wrap', 
+                    fontSize: '14px',
+                    padding: '0 8px',
+                    marginBottom: '24px'
+                  }}>
+                    {aiAnswer.answer}
+                  </div>
+                  
+                  {aiAnswer.evidence && aiAnswer.evidence.length > 0 && (
+                    <div style={{ marginTop: '24px', paddingTop: '24px', borderTop: '1px solid var(--border-color)' }}>
+                      <h4 style={{ fontSize: '14px', color: 'var(--text-subdued)', marginBottom: '16px', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+                        Supporting Evidence
+                      </h4>
+                      <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+                        {aiAnswer.evidence.map((quote, idx) => (
+                          <blockquote key={idx} style={{ 
+                            margin: 0, 
+                            padding: '12px 16px', 
+                            borderLeft: '3px solid var(--spotify-green)',
+                            backgroundColor: 'rgba(255,255,255,0.02)',
+                            borderRadius: '0 4px 4px 0',
+                            color: 'var(--text-subdued)',
+                            fontStyle: 'italic',
+                            fontSize: '13px'
+                          }}>
+                            &quot;{quote}&quot;
+                          </blockquote>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                </>
+              )}
             </div>
           ) : null}
         </div>
       )}
 
-      {/* Cluster Cards */}
-      <h2 style={{ fontSize: '18px', marginBottom: '24px', borderBottom: '1px solid var(--border-color)', paddingBottom: '8px' }}>
-        {activeQuery === null ? `Theme Clusters (${visibleClusters.length})` : `Supporting Evidence (${visibleClusters.length})`}
-      </h2>
-      
-      <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
+      {/* Cluster Cards (Hide when a query is active) */}
+      {activeQuery === null && (
+        <>
+          <h2 style={{ fontSize: '18px', marginBottom: '24px', borderBottom: '1px solid var(--border-color)', paddingBottom: '8px' }}>
+            Theme Clusters ({visibleClusters.length})
+          </h2>
+          
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
         {visibleClusters.map((cluster) => {
           const isExpanded = expandedClusterId === cluster.id;
           const evidenceItems = sourceItems.filter(si => cluster.sourceItemIdList.includes(si.id));
@@ -345,7 +382,9 @@ export default function AnalysisPage() {
             </div>
           );
         })}
-      </div>
+          </div>
+        </>
+      )}
     </div>
   );
 }

@@ -144,9 +144,18 @@ ${JSON.stringify(evidence, null, 2)}
   }
 }
 
-export async function askQuestion(question: string, context: InsightCluster[]): Promise<string> {
+export async function askQuestion(question: string, context: InsightCluster[]): Promise<{ answer: string, evidence: string[] }> {
   const aiInstance = getAI();
   if (!aiInstance) throw new Error('GEMINI_API_KEY is not configured');
+
+  const schema: Schema = {
+    type: Type.OBJECT,
+    properties: {
+      answer: { type: Type.STRING },
+      evidence: { type: Type.ARRAY, items: { type: Type.STRING } }
+    },
+    required: ['answer', 'evidence']
+  };
 
   const prompt = `
 You are a highly analytical Product Manager AI assistant helping to interpret user feedback.
@@ -155,6 +164,8 @@ The user has asked the following question:
 
 Below are several insight clusters derived from user reviews. Use this data as evidence to answer the user's question. 
 Be concise, analytical, and directly quote or refer to the evidence when possible. Do not make up information that isn't supported by the clusters.
+
+Extract the exact quotes from the clusters that you used to formulate your answer and place them in the "evidence" array.
 
 Context (Insight Clusters):
 ${JSON.stringify(context, null, 2)}
@@ -166,10 +177,13 @@ ${JSON.stringify(context, null, 2)}
       contents: prompt,
       config: {
         temperature: 0.3,
+        responseMimeType: 'application/json',
+        responseSchema: schema,
       }
     });
 
-    return response.text || 'No response generated.';
+    const text = response.text || '{}';
+    return JSON.parse(text) as { answer: string, evidence: string[] };
   } catch (err) {
     console.error('Gemini Live Ask Question Error:', err);
     throw err;
