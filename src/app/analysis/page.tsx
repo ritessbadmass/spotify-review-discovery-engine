@@ -10,17 +10,7 @@ export default function AnalysisPage() {
   const [sourceItems, setSourceItems] = useState<SourceItem[]>([]);
   
   const [isLoading, setIsLoading] = useState(true);
-  const [activeQuery, setActiveQuery] = useState<string | null>(null);
   const [expandedClusterId, setExpandedClusterId] = useState<string | null>(null);
-  const [aiAnswer, setAiAnswer] = useState<{ answer: string, evidence: string[] } | { error: string } | null>(null);
-  const [isGeneratingAnswer, setIsGeneratingAnswer] = useState(false);
-
-  const QUERIES = [
-    { id: 'q1', label: 'Why do users struggle to discover new music?', filterType: 'frustration' },
-    { id: 'q2', label: 'What drives repetitive listening?', filterType: 'repetitive' },
-    { id: 'q3', label: 'Which segments are most affected by stale recommendations?', filterType: 'segments' },
-    { id: 'q4', label: 'What unmet needs are consistent across sources?', filterType: 'needs' }
-  ];
 
   useEffect(() => {
     async function loadData() {
@@ -42,60 +32,6 @@ export default function AnalysisPage() {
     return <div style={{ padding: '40px', textAlign: 'center', color: 'var(--text-subdued)' }}>Loading insights and synthesis...</div>;
   }
 
-  // Filter clusters based on active query (MVP basic mapping)
-  let visibleClusters = clusters;
-  if (activeQuery === 'q2') {
-    visibleClusters = clusters.filter(c => c.label.includes('Loop') || c.relatedProblemTypes.includes('discover_weekly_repetition'));
-  } else if (activeQuery === 'q3') {
-    visibleClusters = clusters.filter(c => c.relatedProblemTypes.includes('stale_recommendations'));
-  }
-
-  const handleQueryClick = async (queryId: string | null) => {
-    setActiveQuery(queryId);
-    setExpandedClusterId(null);
-    
-    if (!queryId) {
-      setAiAnswer(null);
-      return;
-    }
-
-    const query = QUERIES.find(q => q.id === queryId);
-    if (!query) return;
-
-    // Filter to get the context we will send
-    let contextClusters = clusters;
-    if (queryId === 'q2') {
-      contextClusters = clusters.filter(c => c.label.includes('Loop') || c.relatedProblemTypes.includes('discover_weekly_repetition'));
-    } else if (queryId === 'q3') {
-      contextClusters = clusters.filter(c => c.relatedProblemTypes.includes('stale_recommendations'));
-    }
-
-    setIsGeneratingAnswer(true);
-    setAiAnswer(null);
-    try {
-      const res = await fetch('/api/ask', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          question: query.label,
-          context: contextClusters
-        })
-      });
-      if (res.ok) {
-        const data = await res.json();
-        setAiAnswer(data);
-      } else {
-        const errData = await res.json().catch(() => ({}));
-        setAiAnswer({ error: `Failed to generate an answer. Server returned ${res.status}: ${errData.error || res.statusText}` });
-      }
-    } catch (err: any) {
-      console.error(err);
-      setAiAnswer({ error: `An error occurred while communicating with the AI: ${err.message}` });
-    } finally {
-      setIsGeneratingAnswer(false);
-    }
-  };
-
   return (
     <div className="animate-fade-in" style={{ paddingBottom: '64px' }}>
       <h1 style={{ marginBottom: '8px' }}>Analysis & Synthesis</h1>
@@ -103,46 +39,8 @@ export default function AnalysisPage() {
         High-level PM insights automatically synthesized from row-level feedback.
       </p>
 
-      {/* Query Panel */}
-      <div style={{ marginBottom: '32px', display: 'flex', flexWrap: 'wrap', gap: '12px' }}>
-        <button 
-          onClick={() => handleQueryClick(null)}
-          style={{
-            padding: '8px 16px',
-            borderRadius: '20px',
-            backgroundColor: activeQuery === null ? 'var(--text-highlight)' : 'var(--bg-elevated)',
-            color: activeQuery === null ? 'var(--bg-main)' : 'var(--text-base)',
-            border: 'none',
-            cursor: 'pointer',
-            fontWeight: 600,
-            fontSize: '13px'
-          }}
-        >
-          Overview
-        </button>
-        {QUERIES.map(q => (
-          <button 
-            key={q.id}
-            onClick={() => handleQueryClick(q.id)}
-            style={{
-              padding: '8px 16px',
-              borderRadius: '20px',
-              backgroundColor: activeQuery === q.id ? 'var(--spotify-green)' : 'var(--bg-elevated)',
-              color: activeQuery === q.id ? '#000' : 'var(--text-base)',
-              border: 'none',
-              cursor: 'pointer',
-              fontWeight: 600,
-              fontSize: '13px',
-              transition: 'all 0.2s'
-            }}
-          >
-            {q.label}
-          </button>
-        ))}
-      </div>
-
       {/* PM Insight Synthesis Cards */}
-      {synthesis && activeQuery === null && (
+      {synthesis && (
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '16px', marginBottom: '40px' }}>
           <div className="card glass-panel" style={{ borderTop: '3px solid #ff6b6b' }}>
             <h3 style={{ fontSize: '14px', textTransform: 'uppercase', color: 'var(--text-subdued)', marginBottom: '16px' }}>Top Frustrations</h3>
@@ -165,77 +63,13 @@ export default function AnalysisPage() {
         </div>
       )}
 
-      {/* AI Answer Section */}
-      {activeQuery !== null && (
-        <div style={{ marginBottom: '40px' }}>
-          {isGeneratingAnswer ? (
-            <div className="card glass-panel" style={{ textAlign: 'center', padding: '32px' }}>
-              <div style={{ color: 'var(--spotify-green)', fontWeight: 600, fontSize: '16px' }}>
-                Analyzing data to generate an answer...
-              </div>
-            </div>
-          ) : aiAnswer ? (
-            <div className="card glass-panel" style={{ borderTop: '4px solid #a482d8' }}>
-              <h3 style={{ fontSize: '16px', color: '#a482d8', marginBottom: '16px', display: 'flex', alignItems: 'center', gap: '8px' }}>
-                <span style={{ fontSize: '20px' }}>✨</span> AI Synthesis
-              </h3>
-              
-              {'error' in aiAnswer ? (
-                <div style={{ color: 'var(--spotify-red)', fontWeight: 500, padding: '16px', backgroundColor: 'rgba(255, 75, 75, 0.1)', borderRadius: '8px' }}>
-                  {aiAnswer.error}
-                </div>
-              ) : (
-                <>
-                  <div style={{ 
-                    color: 'var(--text-base)', 
-                    lineHeight: 1.6, 
-                    whiteSpace: 'pre-wrap', 
-                    fontSize: '14px',
-                    padding: '0 8px',
-                    marginBottom: '24px'
-                  }}>
-                    {aiAnswer.answer}
-                  </div>
-                  
-                  {aiAnswer.evidence && aiAnswer.evidence.length > 0 && (
-                    <div style={{ marginTop: '24px', paddingTop: '24px', borderTop: '1px solid var(--border-color)' }}>
-                      <h4 style={{ fontSize: '14px', color: 'var(--text-subdued)', marginBottom: '16px', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
-                        Supporting Evidence
-                      </h4>
-                      <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-                        {aiAnswer.evidence.map((quote, idx) => (
-                          <blockquote key={idx} style={{ 
-                            margin: 0, 
-                            padding: '12px 16px', 
-                            borderLeft: '3px solid var(--spotify-green)',
-                            backgroundColor: 'rgba(255,255,255,0.02)',
-                            borderRadius: '0 4px 4px 0',
-                            color: 'var(--text-subdued)',
-                            fontStyle: 'italic',
-                            fontSize: '13px'
-                          }}>
-                            &quot;{quote}&quot;
-                          </blockquote>
-                        ))}
-                      </div>
-                    </div>
-                  )}
-                </>
-              )}
-            </div>
-          ) : null}
-        </div>
-      )}
-
-      {/* Cluster Cards (Hide when a query is active) */}
-      {activeQuery === null && (
-        <>
-          <h2 style={{ fontSize: '18px', marginBottom: '24px', borderBottom: '1px solid var(--border-color)', paddingBottom: '8px' }}>
-            Theme Clusters ({visibleClusters.length})
-          </h2>
-          
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
-        {visibleClusters.map((cluster) => {
+      {/* Cluster Cards */}
+      <h2 style={{ fontSize: '18px', marginBottom: '24px', borderBottom: '1px solid var(--border-color)', paddingBottom: '8px' }}>
+        Theme Clusters ({clusters.length})
+      </h2>
+      
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
+        {clusters.map((cluster) => {
           const isExpanded = expandedClusterId === cluster.id;
           const evidenceItems = sourceItems.filter(si => cluster.sourceItemIdList.includes(si.id));
           
@@ -282,7 +116,6 @@ export default function AnalysisPage() {
               </div>
 
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '16px', marginBottom: '24px' }}>
-                {/* Segments & Problems */}
                 <div style={{ gridColumn: 'span 2' }}>
                   <div style={{ display: 'flex', gap: '16px' }}>
                     <div style={{ flex: 1 }}>
@@ -308,7 +141,6 @@ export default function AnalysisPage() {
                   </div>
                 </div>
 
-                {/* CSS Chart for Source Distribution */}
                 <div>
                   <h3 style={{ fontSize: '11px', color: 'var(--text-subdued)', marginBottom: '8px', textTransform: 'uppercase' }}>Source Distribution</h3>
                   <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
@@ -328,7 +160,6 @@ export default function AnalysisPage() {
                 </div>
               </div>
 
-              {/* Sample Quotes (always visible) */}
               <div style={{ marginBottom: '16px' }}>
                 <h3 style={{ fontSize: '11px', color: 'var(--text-subdued)', marginBottom: '12px', textTransform: 'uppercase' }}>Sample Evidence</h3>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
@@ -347,7 +178,6 @@ export default function AnalysisPage() {
                 </div>
               </div>
 
-              {/* Traceability View Toggle */}
               <div style={{ borderTop: '1px solid var(--border-color)', paddingTop: '16px', marginTop: '16px' }}>
                 <button 
                   className="btn-secondary"
@@ -382,9 +212,7 @@ export default function AnalysisPage() {
             </div>
           );
         })}
-          </div>
-        </>
-      )}
+      </div>
     </div>
   );
 }
