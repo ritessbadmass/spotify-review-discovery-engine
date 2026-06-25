@@ -72,6 +72,11 @@ export function generateClusters(items: SourceItem[], analysisMap: Record<string
     } else if (key === 'mood_conflict' || key === 'weak_user_control') {
       label = 'Loss of Vibe Control';
       description = 'Users want more control over how the algorithm interpolates their current mood or avoids specific content.';
+    } else {
+      // Dynamic fallback for any other problem types
+      const cleanKey = key.replace(/_/g, ' ');
+      label = cleanKey.split(' ').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
+      description = `Users are expressing issues related to ${cleanKey}.`;
     }
 
     clusters.push({

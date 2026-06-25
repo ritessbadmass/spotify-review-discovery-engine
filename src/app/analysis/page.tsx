@@ -12,6 +12,8 @@ export default function AnalysisPage() {
   const [isLoading, setIsLoading] = useState(true);
   const [activeQuery, setActiveQuery] = useState<string | null>(null);
   const [expandedClusterId, setExpandedClusterId] = useState<string | null>(null);
+  const [aiAnswer, setAiAnswer] = useState<string | null>(null);
+  const [isGeneratingAnswer, setIsGeneratingAnswer] = useState(false);
 
   const QUERIES = [
     { id: 'q1', label: 'Why do users struggle to discover new music?', filterType: 'frustration' },
@@ -48,6 +50,51 @@ export default function AnalysisPage() {
     visibleClusters = clusters.filter(c => c.relatedProblemTypes.includes('stale_recommendations'));
   }
 
+  const handleQueryClick = async (queryId: string | null) => {
+    setActiveQuery(queryId);
+    setExpandedClusterId(null);
+    
+    if (!queryId) {
+      setAiAnswer(null);
+      return;
+    }
+
+    const query = QUERIES.find(q => q.id === queryId);
+    if (!query) return;
+
+    // Filter to get the context we will send
+    let contextClusters = clusters;
+    if (queryId === 'q2') {
+      contextClusters = clusters.filter(c => c.label.includes('Loop') || c.relatedProblemTypes.includes('discover_weekly_repetition'));
+    } else if (queryId === 'q3') {
+      contextClusters = clusters.filter(c => c.relatedProblemTypes.includes('stale_recommendations'));
+    }
+
+    setIsGeneratingAnswer(true);
+    setAiAnswer(null);
+    try {
+      const res = await fetch('/api/ask', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          question: query.label,
+          context: contextClusters
+        })
+      });
+      if (res.ok) {
+        const data = await res.json();
+        setAiAnswer(data.answer);
+      } else {
+        setAiAnswer("Failed to generate an answer. Please check the logs.");
+      }
+    } catch (err) {
+      console.error(err);
+      setAiAnswer("An error occurred while communicating with the AI.");
+    } finally {
+      setIsGeneratingAnswer(false);
+    }
+  };
+
   return (
     <div className="animate-fade-in" style={{ paddingBottom: '64px' }}>
       <h1 style={{ marginBottom: '8px' }}>Analysis & Synthesis</h1>
@@ -58,7 +105,7 @@ export default function AnalysisPage() {
       {/* Query Panel */}
       <div style={{ marginBottom: '32px', display: 'flex', flexWrap: 'wrap', gap: '12px' }}>
         <button 
-          onClick={() => setActiveQuery(null)}
+          onClick={() => handleQueryClick(null)}
           style={{
             padding: '8px 16px',
             borderRadius: '20px',
@@ -75,7 +122,7 @@ export default function AnalysisPage() {
         {QUERIES.map(q => (
           <button 
             key={q.id}
-            onClick={() => setActiveQuery(q.id)}
+            onClick={() => handleQueryClick(q.id)}
             style={{
               padding: '8px 16px',
               borderRadius: '20px',
@@ -114,6 +161,34 @@ export default function AnalysisPage() {
               {synthesis.repetitiveDrivers.map((item, i) => <li key={i}>{item}</li>)}
             </ul>
           </div>
+        </div>
+      )}
+
+      {/* AI Answer Section */}
+      {activeQuery !== null && (
+        <div style={{ marginBottom: '40px' }}>
+          {isGeneratingAnswer ? (
+            <div className="card glass-panel" style={{ textAlign: 'center', padding: '32px' }}>
+              <div style={{ color: 'var(--spotify-green)', fontWeight: 600, fontSize: '16px' }}>
+                Analyzing data to generate an answer...
+              </div>
+            </div>
+          ) : aiAnswer ? (
+            <div className="card glass-panel" style={{ borderTop: '4px solid #a482d8' }}>
+              <h3 style={{ fontSize: '16px', color: '#a482d8', marginBottom: '16px', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                <span style={{ fontSize: '20px' }}>✨</span> AI Synthesis
+              </h3>
+              <div style={{ 
+                color: 'var(--text-base)', 
+                lineHeight: 1.6, 
+                whiteSpace: 'pre-wrap', 
+                fontSize: '14px',
+                padding: '0 8px'
+              }}>
+                {aiAnswer}
+              </div>
+            </div>
+          ) : null}
         </div>
       )}
 

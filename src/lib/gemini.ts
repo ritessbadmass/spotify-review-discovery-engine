@@ -139,3 +139,34 @@ ${JSON.stringify(evidence, null, 2)}
     throw err;
   }
 }
+
+export async function askQuestion(question: string, context: InsightCluster[]): Promise<string> {
+  if (!ai) throw new Error('GEMINI_API_KEY is not configured');
+
+  const prompt = `
+You are a highly analytical Product Manager AI assistant helping to interpret user feedback.
+The user has asked the following question:
+"${question}"
+
+Below are several insight clusters derived from user reviews. Use this data as evidence to answer the user's question. 
+Be concise, analytical, and directly quote or refer to the evidence when possible. Do not make up information that isn't supported by the clusters.
+
+Context (Insight Clusters):
+${JSON.stringify(context, null, 2)}
+  `;
+
+  try {
+    const response = await ai.models.generateContent({
+      model: 'gemini-2.5-flash',
+      contents: prompt,
+      config: {
+        temperature: 0.3,
+      }
+    });
+
+    return response.text || 'No response generated.';
+  } catch (err) {
+    console.error('Gemini Live Ask Question Error:', err);
+    throw err;
+  }
+}
