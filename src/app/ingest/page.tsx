@@ -73,25 +73,37 @@ export default function IngestWizardPage() {
     await delay(1500);
     setSimulationLogs(prev => [...prev, '[System] Deduplicating and normalizing data across 3 sources...']);
     
-    await delay(1000);
-    setSimulationLogs(prev => [...prev, '[System] Success! Items ready for ingestion.']);
+    try {
+      const res = await fetch('/api/mock-scrape');
+      if (res.ok) {
+        const data = await res.json();
+        setSimulationLogs(prev => [...prev, `[System] Success! ${data.items.length} items ready for ingestion.`]);
+        await delay(800);
+        
+        const mockDrafts: DraftSourceItem[] = data.items;
+        setDraftItems(flagDuplicates(mockDrafts, existingItems));
+      } else {
+        throw new Error('Failed to fetch simulated scrape data');
+      }
+    } catch (err) {
+      console.error(err);
+      setSimulationLogs(prev => [...prev, '[System] Error fetching scraped data. Using fallback.']);
+      await delay(1000);
+      const mockDrafts: DraftSourceItem[] = mockSourceItems.map((item, idx) => ({
+        id: `draft-${Date.now()}-${idx}`,
+        sourceType: item.sourceType,
+        sourceUrl: item.sourceUrl || '',
+        author: item.author,
+        date: item.date,
+        rawText: item.rawText,
+        normalizedText: item.normalizedText,
+        productName: item.productName,
+        language: item.language,
+        region: item.region,
+      }));
+      setDraftItems(flagDuplicates(mockDrafts, existingItems));
+    }
     
-    await delay(800);
-    
-    const mockDrafts: DraftSourceItem[] = mockSourceItems.map((item, idx) => ({
-      id: `draft-${Date.now()}-${idx}`,
-      sourceType: item.sourceType,
-      sourceUrl: item.sourceUrl || '',
-      author: item.author,
-      date: item.date,
-      rawText: item.rawText,
-      normalizedText: item.normalizedText,
-      productName: item.productName,
-      language: item.language,
-      region: item.region,
-    }));
-
-    setDraftItems(flagDuplicates(mockDrafts, existingItems));
     setStep(3);
   };
 

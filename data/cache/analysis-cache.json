@@ -1,0 +1,119 @@
+{
+  "s1_bda3fa41725fadd37399aaca664d5dca483fb5dad5a47c62628694e05924c5f0": {
+    "sourceItemId": "s1",
+    "sentiment": "Negative",
+    "primaryTopic": "Discover Weekly",
+    "secondaryTopics": [
+      "repetitive artists",
+      "new music discovery",
+      "stale recommendations"
+    ],
+    "discoveryProblemType": "discover_weekly_repetition",
+    "repetitiveListeningSignal": true,
+    "userIntent": "find_new_music",
+    "desiredOutcome": "receive genuinely new and diverse music recommendations",
+    "frustrationSeverity": "High",
+    "likelySegment": "active_music_explorer",
+    "unmetNeed": "diverse and genuinely new music discovery",
+    "confidence": 0.95,
+    "reasoning": "The user explicitly states 'discover weekly used to be amazing but for the past 6 months it just gives me the exact same 10 artists over and over'. This clearly indicates a 'discover_weekly_repetition' problem and a 'repetitiveListeningSignal'. Their intent is to 'find new music not listen to slightly different songs by bands i already know', highlighting the unmet need for diverse discovery. The long duration of the problem (6 months) suggests 'High' frustration. The user's past positive experience with Discover Weekly and current desire for new music points to an 'active_music_explorer' segment."
+  },
+  "s2_6ba10ab71f58b0e5e5583227b1e10b89e5a3fb77e6ec2c471d0a3223694f81ab": {
+    "sourceItemId": "s2",
+    "sentiment": "Negative",
+    "primaryTopic": "Irrelevant content",
+    "secondaryTopics": [
+      "Podcasts",
+      "Music feed",
+      "Song radio",
+      "Repetitive content"
+    ],
+    "discoveryProblemType": "stale_recommendations",
+    "repetitiveListeningSignal": true,
+    "userIntent": "avoid_bad_recommendations",
+    "desiredOutcome": "Relevant music recommendations",
+    "frustrationSeverity": "High",
+    "likelySegment": "routine_listener",
+    "unmetNeed": "Diverse and relevant content discovery",
+    "confidence": 0.9,
+    "reasoning": "The user is frustrated by podcasts appearing in their music feed and the song radio repeatedly playing their 'heavy rotation', explicitly stating they feel 'trapped in a loop'. This indicates a strong negative sentiment towards irrelevant and repetitive recommendations, highlighting a need for more diverse and contextually appropriate content."
+  },
+  "s3_5e7fda381555ee56cbf2e15fc0a1f20ac655fca4b345cee592151f9df545b22b": {
+    "sourceItemId": "s3",
+    "sentiment": "Negative",
+    "primaryTopic": "Irrelevant recommendations due to non-music listening",
+    "secondaryTopics": [
+      "White noise",
+      "Baby sleep",
+      "Taste profile",
+      "Release Radar",
+      "Playlist exclusion"
+    ],
+    "discoveryProblemType": "poor_context_awareness",
+    "repetitiveListeningSignal": true,
+    "userIntent": "avoid_bad_recommendations",
+    "desiredOutcome": "Taste profile accurately reflects music preferences; exclude utility playlists from influencing recommendations",
+    "frustrationSeverity": "High",
+    "likelySegment": "routine_listener",
+    "unmetNeed": "Differentiate between utility listening and active music listening; granular control over recommendation sources",
+    "confidence": 0.95,
+    "reasoning": "The user explicitly states that playing white noise for their baby has 'ruined' their taste profile, leading to irrelevant recommendations on Release Radar. They request the exclusion of playlists from recommendations, indicating a clear desire for better context awareness from the system."
+  },
+  "s4_888494819b67fdc39de0ce79693921ac6352f6895fb807926e31da1d5e884b53": {
+    "sourceItemId": "s4",
+    "sentiment": "Negative",
+    "primaryTopic": "algorithm recommendations",
+    "secondaryTopics": [
+      "mainstream artists",
+      "indie band",
+      "radio station",
+      "repetitive recommendations"
+    ],
+    "discoveryProblemType": "weak_user_control",
+    "repetitiveListeningSignal": true,
+    "userIntent": "avoid_bad_recommendations",
+    "desiredOutcome": "Receive diverse and relevant recommendations based on initial input, avoiding mainstream convergence.",
+    "frustrationSeverity": "High",
+    "likelySegment": "active_music_explorer",
+    "unmetNeed": "Personalized recommendations that respect user input and genre preferences, rather than defaulting to mainstream.",
+    "confidence": 0.95,
+    "reasoning": "The user expresses high frustration ('so frustrating') because the algorithm consistently pushes mainstream artists (Drake, Taylor Swift) even when they initiate a radio station from an indie band. This indicates a lack of control over recommendations and a repetitive listening signal, pointing to 'weak_user_control' and a desire to 'avoid_bad_recommendations' and find more relevant music."
+  },
+  "s5_b81d58e0373b4c8a561be0afec484a71640206c8893f9fefd7c4fdde5948030f": {
+    "sourceItemId": "s5",
+    "sentiment": "Negative",
+    "primaryTopic": "Music Discovery",
+    "secondaryTopics": [
+      "Daily Mixes",
+      "Underground Artists",
+      "Recommendations"
+    ],
+    "discoveryProblemType": "stale_recommendations",
+    "repetitiveListeningSignal": true,
+    "userIntent": "find_new_music",
+    "desiredOutcome": "Discover new and underground artists through personalized recommendations",
+    "frustrationSeverity": "High",
+    "likelySegment": "active_music_explorer",
+    "unmetNeed": "Effective discovery of new and diverse music, especially from less mainstream artists",
+    "confidence": 1,
+    "reasoning": "The user explicitly states that daily mixes no longer help discover 'underground artists' and are 'literally just my liked songs reorganized', indicating a failure in new music discovery and a repetitive listening experience."
+  },
+  "s6_473ee3554ce39702201e2c3e097672b1920c74552d1c66ad9b6d050916b1d6a6": {
+    "sourceItemId": "s6",
+    "sentiment": "Negative",
+    "primaryTopic": "Song recommendations",
+    "secondaryTopics": [
+      "Gym playlists",
+      "Stale content"
+    ],
+    "discoveryProblemType": "stale_recommendations",
+    "repetitiveListeningSignal": true,
+    "userIntent": "find_new_music",
+    "desiredOutcome": "Receive fresh and diverse song recommendations to add to playlists",
+    "frustrationSeverity": "High",
+    "likelySegment": "active_music_explorer",
+    "unmetNeed": "The need for dynamic and varied song suggestions to enrich user-created playlists.",
+    "confidence": 0.95,
+    "reasoning": "The user explicitly states that the recommended songs are 'always the same 5 tracks' and 'never actually suggests anything fresh,' which directly points to stale recommendations and a repetitive listening signal. They are actively creating gym playlists, indicating an intent to find new music and diversify their listening."
+  }
+}
