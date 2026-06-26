@@ -115,5 +115,176 @@
     "unmetNeed": "The need for dynamic and varied song suggestions to enrich user-created playlists.",
     "confidence": 0.95,
     "reasoning": "The user explicitly states that the recommended songs are 'always the same 5 tracks' and 'never actually suggests anything fresh,' which directly points to stale recommendations and a repetitive listening signal. They are actively creating gym playlists, indicating an intent to find new music and diversify their listening."
+  },
+  "draft-1782486574945-0_8ed592d60ec5e2892b3306b5e190185df1d75fbc86388007465435d35379fa65": {
+    "sourceItemId": "draft-1782486574945-0",
+    "sentiment": "Negative",
+    "primaryTopic": "User control over playback",
+    "secondaryTopics": [
+      "Ads",
+      "Premium features",
+      "Playlist management"
+    ],
+    "discoveryProblemType": "weak_user_control",
+    "repetitiveListeningSignal": false,
+    "userIntent": "regain_control",
+    "desiredOutcome": "Ability to select specific songs from a playlist without ads or payment",
+    "frustrationSeverity": "High",
+    "likelySegment": "playlist_dependent_listener",
+    "unmetNeed": "Control over music playback and ad-free experience for owned content",
+    "confidence": 1,
+    "reasoning": "The user explicitly states 'lemme choose which song to play from my. playlist without paying tooo many adds', indicating a clear lack of control over their own playlist content and frustration with ads/payment barriers."
+  },
+  "draft-1782486574945-1_ea4ed556c54a7b9bc4b2a4916815b500a4dc4c6de4f705f292aecf044d36d417": {
+    "sourceItemId": "draft-1782486574945-1",
+    "sentiment": "Negative",
+    "primaryTopic": "Ads and limited features",
+    "secondaryTopics": [
+      "Unwanted recommendations",
+      "Lack of control over playback"
+    ],
+    "discoveryProblemType": "weak_user_control",
+    "repetitiveListeningSignal": false,
+    "userIntent": "regain_control",
+    "desiredOutcome": "Ad-free listening and control over playlist content",
+    "frustrationSeverity": "High",
+    "likelySegment": "playlist_dependent_listener",
+    "unmetNeed": "Uninterrupted and personalized listening experience",
+    "confidence": 0.9,
+    "reasoning": "The user expresses strong dissatisfaction with the free tier due to frequent ads interrupting their playlist and the platform adding unwanted songs under the guise of 'smart filter.' This leads to a desire to switch to an offline player, indicating high frustration and a lack of control over their listening experience."
+  },
+  "draft-1782486574945-2_8cdea30a6bde9bab5f3e8b06fb8c4bb22ce0d9ed6f1979503c11577adc097d99": {
+    "sourceItemId": "draft-1782486574945-2",
+    "sentiment": "Negative",
+    "primaryTopic": "User Control",
+    "secondaryTopics": [
+      "Playlist Management",
+      "Accidental Actions",
+      "Missing UI Elements"
+    ],
+    "discoveryProblemType": "weak_user_control",
+    "repetitiveListeningSignal": false,
+    "userIntent": "regain_control",
+    "desiredOutcome": "Ability to cancel or undo accidental playlist edits",
+    "frustrationSeverity": "High",
+    "likelySegment": "playlist_dependent_listener",
+    "unmetNeed": "The ability to undo or cancel an accidental action during playlist editing",
+    "confidence": 1,
+    "reasoning": "The user explicitly states the lack of a 'CANCEL' or 'Done' button when adding a song to a playlist, which prevents them from undoing accidental edits. This directly points to a lack of user control and a high level of frustration over irreversible actions."
+  },
+  "draft-1782486574945-3_434278f3ed2e00fa63e0edefea8ebc56255ed2f5ef32e77f3abb25ec9946bed6": {
+    "sourceItemId": "draft-1782486574945-3",
+    "sentiment": "Negative",
+    "primaryTopic": "User control over music selection",
+    "secondaryTopics": [
+      "Free version limitations",
+      "Playlist functionality",
+      "Premium value"
+    ],
+    "discoveryProblemType": "weak_user_control",
+    "repetitiveListeningSignal": false,
+    "userIntent": "regain_control",
+    "desiredOutcome": "Ability to choose specific songs and have more control over music playback in the free version.",
+    "frustrationSeverity": "High",
+    "likelySegment": "playlist_dependent_listener",
+    "unmetNeed": "Freedom to select and control individual tracks without premium subscription.",
+    "confidence": 0.95,
+    "reasoning": "The user explicitly states the free version is 'terrible' and 'way too limited' because they cannot choose specific songs, even within playlists. The question 'Shouldn't it be us who choose the music?' directly indicates a strong desire for user control, which is currently unmet."
+  },
+  "draft-1782486574945-4_51db9daa95315cf6980c78e5f895d62224200692fc82ec2fdbf749c27735fb2f": {
+    "sourceItemId": "draft-1782486574945-4",
+    "sentiment": "Negative",
+    "primaryTopic": "App performance and bugs",
+    "secondaryTopics": [
+      "Slow loading",
+      "Buggy playback",
+      "Broken queue",
+      "Broken playlists",
+      "Lagging app",
+      "Search issues",
+      "Force stop required"
+    ],
+    "discoveryProblemType": "weak_user_control",
+    "repetitiveListeningSignal": false,
+    "userIntent": "regain_control",
+    "desiredOutcome": "A functional, fast, and reliable Spotify app on mobile",
+    "frustrationSeverity": "Critical",
+    "likelySegment": "routine_listener",
+    "unmetNeed": "Reliable and performant mobile application for music playback and management",
+    "confidence": 0.95,
+    "reasoning": "The user explicitly details multiple severe performance issues and bugs with the Spotify mobile app, including slowness, loading failures, broken playback/queue/playlist functions, lag, and search problems, leading to a critical level of frustration. The issues prevent basic app usage, indicating a lack of user control over the application's functionality."
+  },
+  "draft-1782486574945-5_475bea8f52f0442df4823a54ae377dee44ac340bd5f82ea48c4e920a70147987": {
+    "sourceItemId": "draft-1782486574945-5",
+    "sentiment": "Negative",
+    "primaryTopic": "Podcast playback issues",
+    "secondaryTopics": [
+      "App crashing",
+      "Unwanted content",
+      "Playlist behavior"
+    ],
+    "discoveryProblemType": "weak_user_control",
+    "repetitiveListeningSignal": false,
+    "userIntent": "regain_control",
+    "desiredOutcome": "Consistent podcast playback (looping as desired) and application stability without crashes.",
+    "frustrationSeverity": "Critical",
+    "likelySegment": "routine_listener",
+    "unmetNeed": "Reliable and controllable podcast playback experience, and a stable application.",
+    "confidence": 0.95,
+    "reasoning": "The user describes a critical bug where the app crashes instantly when it plays an 'unwanted' podcast instead of looping the intended one. This highlights a lack of user control over playback and a severe stability issue. The initial positive remark is overshadowed by the critical bug and frustration."
+  },
+  "draft-1782486574946-11_b4ed6619261e16ffcfd87812bbcf5f65a0d593a5dbc6d75f46051bdb12538857": {
+    "sourceItemId": "draft-1782486574946-11",
+    "sentiment": "Negative",
+    "primaryTopic": "Default shuffle playback",
+    "secondaryTopics": [
+      "User control",
+      "Playlist playback order"
+    ],
+    "discoveryProblemType": "weak_user_control",
+    "repetitiveListeningSignal": false,
+    "userIntent": "regain_control",
+    "desiredOutcome": "Ability to listen to songs in order by default or easily disable shuffle",
+    "frustrationSeverity": "High",
+    "likelySegment": "routine_listener",
+    "unmetNeed": "Control over playback settings and a consistent user experience",
+    "confidence": 1,
+    "reasoning": "The user explicitly states 'I hate that random is set on all playlists as default now' and expresses a preference for 'listening songs in order more than shuffle', indicating a strong negative sentiment and a loss of control over a previously available option."
+  },
+  "draft-1782486574946-12_3ce34f84f0bee7f23d85f93aae3ee5011f6cd96290c3362eef153a5dabbe08cf": {
+    "sourceItemId": "draft-1782486574946-12",
+    "sentiment": "Positive",
+    "primaryTopic": "Subscription benefits",
+    "secondaryTopics": [
+      "Ads",
+      "Playlist control",
+      "Daily listening"
+    ],
+    "discoveryProblemType": "weak_user_control",
+    "repetitiveListeningSignal": false,
+    "userIntent": "regain_control",
+    "desiredOutcome": "More control over playlist playback and an ad-free experience for free users",
+    "frustrationSeverity": "Medium",
+    "likelySegment": "routine_listener",
+    "unmetNeed": "Control over playlist playback order and an ad-free experience for free users",
+    "confidence": 0.9,
+    "reasoning": "The user praises the app for subscribers and daily listeners, indicating a positive overall sentiment. However, they explicitly mention ads and the inability to control playlist settings (order/shuffle) as significant drawbacks for free users, highlighting a lack of user control."
+  },
+  "draft-1782486574946-13_cf9e6577d57c9d51d77c64840e9d276b9bc750d42aef88d5c0ad25a7a7ce5264": {
+    "sourceItemId": "draft-1782486574946-13",
+    "sentiment": "Negative",
+    "primaryTopic": "App crashing",
+    "secondaryTopics": [
+      "Playlist access"
+    ],
+    "discoveryProblemType": "weak_user_control",
+    "repetitiveListeningSignal": false,
+    "userIntent": "regain_control",
+    "desiredOutcome": "App functions reliably without crashing when opening playlists",
+    "frustrationSeverity": "Critical",
+    "likelySegment": "playlist_dependent_listener",
+    "unmetNeed": "Reliable application functionality and uninterrupted access to content",
+    "confidence": 0.95,
+    "reasoning": "The user explicitly states the app is 'great but crashing aways when I open my playlist'. The 'crashing aways' indicates a critical, recurring technical issue that prevents basic app usage and access to their playlists. This represents a loss of user control over the app's fundamental operation. While not a direct discovery problem, the crash prevents any interaction, including discovery. The user's intent is to regain control over the app's stability."
   }
 }

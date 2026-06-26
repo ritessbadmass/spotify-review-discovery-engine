@@ -69,7 +69,11 @@ async function getStoredAnalysis(): Promise<Record<string, AnalysisResult>> {
 async function saveStoredAnalysis(map: Record<string, AnalysisResult>) {
   cachedAnalysis = map;
   if (typeof window !== 'undefined') {
-    localStorage.setItem('spotify_mock_analysis', JSON.stringify(map));
+    try {
+      localStorage.setItem('spotify_mock_analysis', JSON.stringify(map));
+    } catch (e) {
+      console.warn('localStorage quota exceeded for analysis, relying on memory/Redis cache.', e);
+    }
     try {
       fetch('/api/db', {
         method: 'POST',
@@ -264,7 +268,11 @@ export async function bulkIngest(newItems: SourceItem[], onProgress?: (done: num
     const merged = [...newItems, ...existing];
     
     cachedItems = merged;
-    localStorage.setItem('spotify_mock_items', JSON.stringify(merged));
+    try {
+      localStorage.setItem('spotify_mock_items', JSON.stringify(merged));
+    } catch (e) {
+      console.warn('localStorage quota exceeded for items, relying on memory/Redis cache.', e);
+    }
     
     // Sync items to DB in background
     try {
