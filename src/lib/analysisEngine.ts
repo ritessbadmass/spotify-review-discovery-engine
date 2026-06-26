@@ -60,8 +60,8 @@ function deterministicMockAnalysis(item: SourceItem): AnalysisResult {
 
   if (text.includes('sleep') || text.includes('kids') || text.includes('white noise') || text.includes('baby')) {
     primaryTopic = 'Taste Profile Utility';
-    discoveryProblemType = 'poor_context_awareness';
-    likelySegment = 'routine_listener';
+    discoveryProblemType = 'mood_context_mismatch';
+    likelySegment = 'utility_background_listener';
     userIntent = 'discover_by_context';
     repetitiveListeningSignal = true;
     severity = 'Critical';
@@ -69,49 +69,60 @@ function deterministicMockAnalysis(item: SourceItem): AnalysisResult {
   } 
   else if (text.includes('discover weekly') || text.includes('over and over') || text.includes('exact same')) {
     primaryTopic = 'Discover Weekly Algorithm';
-    discoveryProblemType = 'discover_weekly_repetition';
+    discoveryProblemType = 'novelty_deficit';
     likelySegment = 'active_music_explorer';
     userIntent = 'diversify_taste';
     repetitiveListeningSignal = true;
     severity = 'High';
-    reasoning = 'The user explicitly references repetition within discovery surfaces, suggesting an algorithmic loop.';
+    reasoning = 'The user explicitly references repetition within discovery surfaces, suggesting an algorithmic loop and lack of novelty.';
   }
   else if (text.includes('mood') || text.includes('vibe') || text.includes('gym') || text.includes('workout')) {
     primaryTopic = 'Contextual Playlists';
-    discoveryProblemType = 'mood_mismatch';
+    discoveryProblemType = 'mood_context_mismatch';
     likelySegment = 'mood_based_listener';
     userIntent = 'stay_in_current_mood';
     reasoning = 'User mentions specific activities or moods (gym/vibe), indicating frustration when recommendations break that context.';
   }
   else if (text.includes('k-pop') || text.includes('language') || text.includes('spanish')) {
     primaryTopic = 'Language Bubbles';
-    discoveryProblemType = 'language_loop';
-    likelySegment = 'bilingual_listener';
+    discoveryProblemType = 'genre_mismatch';
+    likelySegment = 'niche_genre_seeker';
     userIntent = 'regain_control';
-    reasoning = 'Mentioning specific foreign genres/languages often leads to language loops due to rigid algorithmic tagging.';
+    reasoning = 'Mentioning specific foreign genres/languages often leads to rigid genre or language loops due to rigid algorithmic tagging.';
   }
   else if (text.includes('mainstream') || text.includes('drake') || text.includes('taylor swift') || text.includes('pop hits')) {
     primaryTopic = 'Mainstream Bias';
-    discoveryProblemType = 'stale_recommendations';
-    likelySegment = 'active_music_explorer';
+    discoveryProblemType = 'weak_long_tail_exploration';
+    likelySegment = 'niche_genre_seeker';
     userIntent = 'find_new_music';
-    reasoning = 'User is complaining about the algorithm converging to highly popular artists regardless of seed track.';
+    reasoning = 'User is complaining about the algorithm converging to highly popular artists regardless of seed track (weak long-tail exploration).';
   }
   else if (text.includes('radio') || text.includes('podcast')) {
     primaryTopic = 'Radio/Feed Mixing';
-    discoveryProblemType = 'weak_user_control';
-    likelySegment = 'passive_discovery_user';
+    discoveryProblemType = 'discovery_control_friction';
+    likelySegment = 'passive_routine_listener';
     userIntent = 'avoid_bad_recommendations';
     repetitiveListeningSignal = true;
-    reasoning = 'Mixing podcasts with music or playing heavy rotation on radio stations shows a lack of granular user control.';
+    reasoning = 'Mixing podcasts with music or playing heavy rotation on radio stations shows friction in discovery control.';
   }
   else if (text.includes('on repeat') || text.includes('bubble') || text.includes('liked songs')) {
     primaryTopic = 'Filter Bubble';
-    discoveryProblemType = 'repeat_playlist_dependency';
-    likelySegment = 'repeat_playlist_listener';
+    discoveryProblemType = 'weak_long_tail_exploration';
+    likelySegment = 'passive_routine_listener';
     userIntent = 'diversify_taste';
     repetitiveListeningSignal = true;
     reasoning = 'Explicitly feeling trapped in a bubble or relying entirely on Liked Songs shows a breakdown in passive discovery mechanisms.';
+  }
+  else if (text.includes('smart shuffle') || text.includes('ruins the vibe') || text.includes('curated')) {
+    primaryTopic = 'Playlist Curation';
+    discoveryProblemType = 'playlist_contamination';
+    likelySegment = 'playlist_curator';
+    userIntent = 'stay_in_current_mood';
+    reasoning = 'Smart Shuffle adds unwanted tracks, contaminating a carefully curated user playlist.';
+  }
+  else {
+    likelySegment = 'low_confidence';
+    discoveryProblemType = 'novelty_deficit';
   }
 
   // Generate mock confidence between 0.75 and 0.98

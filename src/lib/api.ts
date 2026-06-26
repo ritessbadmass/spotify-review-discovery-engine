@@ -154,6 +154,18 @@ export async function getDashboardStats() {
     ? Object.keys(problemCounts).reduce((a, b) => problemCounts[a] > problemCounts[b] ? a : b)
     : 'Unknown';
 
+  const segmentCounts = results.reduce((acc, curr) => {
+    const seg = curr.likelySegment || 'low_confidence';
+    if (seg !== 'low_confidence') {
+      acc[seg] = (acc[seg] || 0) + 1;
+    }
+    return acc;
+  }, {} as Record<string, number>);
+
+  const topSegment = Object.keys(segmentCounts).length > 0
+    ? Object.keys(segmentCounts).reduce((a, b) => segmentCounts[a] > segmentCounts[b] ? a : b)
+    : 'low_confidence';
+
   const provenance = {
     total: results.length,
     mock: results.filter(r => r.provenance?.status === 'mock').length,
@@ -162,14 +174,15 @@ export async function getDashboardStats() {
     sources: items.reduce((acc, curr) => {
       acc[curr.sourceType] = (acc[curr.sourceType] || 0) + 1;
       return acc;
-    }, {} as Record<string, number>)
+    }, {} as Record<string, number>),
+    confidenceAverage: Math.round(results.reduce((sum, r) => sum + (r.confidence || 0), 0) / Math.max(results.length, 1) * 100) / 100
   };
 
   return {
     totalReviews,
     negativeFeedbackPercentage: Math.round((negativeReviews / Math.max(totalReviews, 1)) * 100),
     topProblem: topProblem.replace(/_/g, ' '),
-    topSegment: 'active_music_explorer'.replace(/_/g, ' '),
+    topSegment: topSegment.replace(/_/g, ' '),
     topUnmetNeed: 'Contextual awareness and taste boundary controls',
     provenance
   };

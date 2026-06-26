@@ -83,21 +83,33 @@ export default function AnalysisPage() {
                       <span style={{
                         fontSize: '10px',
                         fontWeight: 'bold',
-                        padding: '2px 6px',
+                        padding: '4px 8px',
                         borderRadius: '4px',
                         textTransform: 'uppercase',
-                        backgroundColor: cluster.provenance.status === 'live' ? 'rgba(29, 185, 84, 0.2)' : 
-                                         cluster.provenance.status === 'cached' ? 'rgba(243, 156, 18, 0.2)' : 
-                                         'rgba(255, 255, 255, 0.1)',
-                        color: cluster.provenance.status === 'live' ? 'var(--spotify-green)' : 
-                               cluster.provenance.status === 'cached' ? '#f39c12' : 
-                               'var(--text-subdued)'
+                        backgroundColor: cluster.provenance.status === 'mock' ? 'rgba(243, 156, 18, 0.1)' : 'rgba(29, 185, 84, 0.1)',
+                        color: cluster.provenance.status === 'mock' ? '#f39c12' : 'var(--spotify-green)',
+                        border: cluster.provenance.status === 'mock' ? '1px dashed #f39c12' : '1px solid var(--spotify-green)'
                       }}>
-                        {cluster.provenance.status}
+                        {cluster.provenance.status === 'mock' ? 'Hypothesis from review analysis' : 'High evidence signal'}
                       </span>
                     )}
                   </div>
-                  <p style={{ color: 'var(--text-subdued)', maxWidth: '600px' }}>{cluster.description}</p>
+                  <p style={{ color: 'var(--text-subdued)', maxWidth: '600px', marginBottom: '16px' }}>{cluster.description}</p>
+                  
+                  {cluster.rootCauseSynthesis && (
+                    <div style={{ backgroundColor: 'var(--bg-main)', padding: '12px 16px', borderRadius: '6px', borderLeft: '2px solid var(--text-highlight)', marginBottom: '16px', maxWidth: '700px' }}>
+                      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
+                        <div>
+                          <h4 style={{ fontSize: '11px', color: 'var(--text-subdued)', textTransform: 'uppercase', marginBottom: '4px' }}>System Failure</h4>
+                          <p style={{ fontSize: '13px', margin: 0 }}>{cluster.rootCauseSynthesis.systemFailure}</p>
+                        </div>
+                        <div>
+                          <h4 style={{ fontSize: '11px', color: 'var(--text-subdued)', textTransform: 'uppercase', marginBottom: '4px' }}>Business Impact</h4>
+                          <p style={{ fontSize: '13px', margin: 0, color: '#f39c12' }}>{cluster.rootCauseSynthesis.businessImplication}</p>
+                        </div>
+                      </div>
+                    </div>
+                  )}
                 </div>
                 <div style={{ textAlign: 'right', display: 'flex', gap: '24px' }}>
                   <div>
@@ -161,19 +173,27 @@ export default function AnalysisPage() {
               </div>
 
               <div style={{ marginBottom: '16px' }}>
-                <h3 style={{ fontSize: '11px', color: 'var(--text-subdued)', marginBottom: '12px', textTransform: 'uppercase' }}>Sample Evidence</h3>
+                <h3 style={{ fontSize: '11px', color: 'var(--text-subdued)', marginBottom: '12px', textTransform: 'uppercase' }}>Evidence Patterns</h3>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
                   {cluster.sampleQuotes.map((quote, i) => (
-                    <blockquote key={i} style={{ 
-                      borderLeft: '2px solid var(--border-color)', 
-                      paddingLeft: '12px', 
-                      color: 'var(--text-base)',
-                      fontStyle: 'italic',
-                      fontSize: '13px',
-                      margin: 0
+                    <div key={i} style={{ 
+                      backgroundColor: 'rgba(255,255,255,0.02)', 
+                      borderRadius: '4px',
+                      padding: '12px',
+                      borderLeft: '2px solid var(--border-color)'
                     }}>
-                      &quot;{quote}&quot;
-                    </blockquote>
+                      <div style={{ fontSize: '10px', color: 'var(--spotify-green)', textTransform: 'uppercase', marginBottom: '4px', fontWeight: 600 }}>
+                        {cluster.rootCauseSynthesis?.userBehavior || 'User Behavior Signal'}
+                      </div>
+                      <blockquote style={{ 
+                        color: 'var(--text-base)',
+                        fontStyle: 'italic',
+                        fontSize: '13px',
+                        margin: 0
+                      }}>
+                        &quot;{quote}&quot;
+                      </blockquote>
+                    </div>
                   ))}
                 </div>
               </div>

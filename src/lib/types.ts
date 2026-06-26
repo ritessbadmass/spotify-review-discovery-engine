@@ -19,22 +19,33 @@ export interface DraftSourceItem extends SourceItem {
 
 export type Sentiment = 'Positive' | 'Neutral' | 'Negative';
 export type DiscoveryProblemType = 
+  | 'novelty_deficit' 
+  | 'genre_mismatch' 
+  | 'playlist_contamination' 
+  | 'mood_context_mismatch' 
+  | 'weak_long_tail_exploration' 
+  | 'discovery_control_friction'
   | 'stale_recommendations' 
   | 'repeat_playlist_dependency' 
   | 'discover_weekly_repetition' 
   | 'same_artist_loop' 
-  | 'mood_mismatch' 
   | 'language_loop' 
   | 'promoted_content_mistrust' 
   | 'poor_context_awareness' 
   | 'weak_user_control';
 
 export type LikelySegment = 
+  | 'active_music_explorer'
+  | 'passive_routine_listener'
+  | 'playlist_curator'
+  | 'mood_based_listener'
+  | 'niche_genre_seeker'
+  | 'utility_background_listener'
+  | 'free_tier_constrained_listener'
+  | 'low_confidence'
   | 'repeat_playlist_listener' 
   | 'passive_discovery_user' 
-  | 'active_music_explorer' 
   | 'bilingual_listener' 
-  | 'mood_based_listener' 
   | 'routine_listener' 
   | 'playlist_dependent_listener';
 
@@ -76,6 +87,13 @@ export interface AnalysisResult {
   provenance?: Provenance;
 }
 
+export interface RootCauseSynthesis {
+  userBehavior: string;
+  systemFailure: string;
+  businessImplication: string;
+  opportunityArea: string;
+}
+
 export interface InsightCluster {
   id: string;
   label: string;
@@ -87,6 +105,7 @@ export interface InsightCluster {
   relatedProblemTypes: DiscoveryProblemType[];
   sourceItemIdList: string[]; // For traceability
   sourceDistribution: Record<string, number>; // e.g. { 'app_store': 5, 'reddit': 2 }
+  rootCauseSynthesis?: RootCauseSynthesis;
   provenance?: Provenance;
 }
 
