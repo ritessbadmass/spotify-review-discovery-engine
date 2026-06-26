@@ -6,7 +6,10 @@ import { fetchExistingItems, bulkIngest } from '@/lib/api';
 import { SourceType, SourceItem, DraftSourceItem } from '@/lib/types';
 import { cleanText, detectLanguage, flagDuplicates } from '@/lib/ingestUtils';
 
-const SOURCE_TYPES: { id: SourceType | 'mixed_csv'; label: string; icon: string }[] = [
+import { mockSourceItems } from '@/lib/mockData';
+
+const SOURCE_TYPES: { id: SourceType | 'mixed_csv' | 'auto_scraper'; label: string; icon: string }[] = [
+  { id: 'auto_scraper', label: 'Run Automated Scrapers (Simulation)', icon: '🤖' },
   { id: 'mixed_csv', label: 'Scraped CSV Upload', icon: '📁' },
 ];
 
@@ -39,11 +42,57 @@ export default function IngestWizardPage() {
 
   const handleNextStep1 = () => {
     if (sourceType) {
-      if (sourceType === 'mixed_csv') {
-        setInputMode('upload');
+      if (sourceType === 'auto_scraper') {
+        simulateScraping();
+      } else {
+        if (sourceType === 'mixed_csv') {
+          setInputMode('upload');
+        }
+        setStep(2);
       }
-      setStep(2);
     }
+  };
+
+  const [simulationLogs, setSimulationLogs] = useState<string[]>([]);
+  
+  const simulateScraping = async () => {
+    setStep(5);
+    setSimulationLogs(['[System] Initializing headless browsers...']);
+    
+    const delay = (ms: number) => new Promise(res => setTimeout(res, ms));
+    
+    await delay(800);
+    setSimulationLogs(prev => [...prev, '[App Store] Connected to RSS feed. Fetching recent 100 reviews...']);
+    
+    await delay(1200);
+    setSimulationLogs(prev => [...prev, '[Play Store] Navigating to com.spotify.music... Found 250 reviews.']);
+    
+    await delay(900);
+    setSimulationLogs(prev => [...prev, '[Reddit] Authenticating with Snoowrap... Fetching r/spotify top posts...']);
+    
+    await delay(1500);
+    setSimulationLogs(prev => [...prev, '[System] Deduplicating and normalizing data across 3 sources...']);
+    
+    await delay(1000);
+    setSimulationLogs(prev => [...prev, '[System] Success! Items ready for ingestion.']);
+    
+    await delay(800);
+    
+    const mockDrafts: DraftSourceItem[] = mockSourceItems.map((item, idx) => ({
+      id: `draft-${Date.now()}-${idx}`,
+      sourceType: item.sourceType,
+      sourceUrl: item.sourceUrl || '',
+      author: item.author,
+      date: item.date,
+      rawText: item.rawText,
+      normalizedText: item.normalizedText,
+      productName: item.productName,
+      language: item.language,
+      region: item.region,
+    }));
+
+    setDraftItems(flagDuplicates(mockDrafts, existingItems));
+    setStep(3);
   };
 
   const handleProcessInput = () => {
@@ -360,6 +409,24 @@ export default function IngestWizardPage() {
             <button className="btn-secondary" onClick={resetWizard}>Import More Data</button>
             <button className="btn-primary" onClick={() => window.location.href = '/'}>Go to Dashboard</button>
           </div>
+        </div>
+      )}
+
+      {/* STEP 5: SIMULATION */}
+      {step === 5 && (
+        <div className="card glass-panel animate-fade-in" style={{ borderLeft: '4px solid var(--spotify-green)' }}>
+          <h2 style={{ fontSize: '18px', marginBottom: '24px', display: 'flex', alignItems: 'center', gap: '12px' }}>
+            <span className="spinner" style={{ display: 'inline-block', width: '16px', height: '16px', border: '2px solid var(--spotify-green)', borderTopColor: 'transparent', borderRadius: '50%', animation: 'spin 1s linear infinite' }}></span>
+            Running Automated Scrapers...
+          </h2>
+          <div style={{ backgroundColor: '#000', color: '#00ff00', padding: '16px', borderRadius: '8px', fontFamily: 'monospace', fontSize: '13px', minHeight: '200px', display: 'flex', flexDirection: 'column', gap: '8px' }}>
+            {simulationLogs.map((log, idx) => (
+              <div key={idx} className="animate-fade-in">{log}</div>
+            ))}
+          </div>
+          <style>{`
+            @keyframes spin { 100% { transform: rotate(360deg); } }
+          `}</style>
         </div>
       )}
 
