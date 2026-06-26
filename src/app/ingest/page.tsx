@@ -22,7 +22,7 @@ const PRESET_DATA = [
 
 export default function IngestWizardPage() {
   const [step, setStep] = useState<number>(1);
-  const [sourceType, setSourceType] = useState<SourceType | 'mixed_csv' | null>(null);
+  const [sourceType, setSourceType] = useState<SourceType | 'mixed_csv' | 'auto_scraper' | null>(null);
   
   // Step 2 State
   const [inputMode, setInputMode] = useState<'paste' | 'upload'>('upload');
