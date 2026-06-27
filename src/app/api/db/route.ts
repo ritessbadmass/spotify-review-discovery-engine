@@ -53,3 +53,18 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: 'Failed to write to Redis' }, { status: 500 });
   }
 }
+
+export async function DELETE(request: Request) {
+  if (!redis) {
+    return NextResponse.json({ error: 'Redis is not configured' }, { status: 500 });
+  }
+  
+  try {
+    await redis.del('spotify_mock_items');
+    await redis.del('spotify_mock_analysis');
+    return NextResponse.json({ success: true });
+  } catch (error) {
+    console.error('Error deleting from Redis:', error);
+    return NextResponse.json({ error: 'Failed to delete from Redis' }, { status: 500 });
+  }
+}

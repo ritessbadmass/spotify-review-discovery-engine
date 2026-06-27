@@ -144,9 +144,8 @@ export async function getDashboardStats() {
   await delay(800);
   const items = await getStoredItems();
   const analysisMap = await getStoredAnalysis();
-  const totalReviews = items.length;
-  
   const results = items.map(i => analysisMap[i.id]).filter(Boolean);
+  const totalReviews = results.length;
   const negativeReviews = results.filter(r => r.sentiment === 'Negative').length;
   
   const problemCounts = results.reduce((acc, curr) => {

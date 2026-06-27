@@ -73,10 +73,15 @@ export default function SettingsPage() {
           This will wipe all imported reviews and analysis results from your local browser storage. This cannot be undone.
         </p>
         <button 
-          onClick={() => {
-            if (window.confirm('Are you sure you want to clear all data?')) {
+          onClick={async () => {
+            if (window.confirm('Are you sure you want to clear all data from the browser and cloud?')) {
               localStorage.removeItem('spotify_mock_items');
               localStorage.removeItem('spotify_mock_analysis');
+              try {
+                await fetch('/api/db', { method: 'DELETE' });
+              } catch (e) {
+                console.error(e);
+              }
               window.location.href = '/';
             }
           }}
