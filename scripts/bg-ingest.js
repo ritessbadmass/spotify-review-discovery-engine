@@ -33,7 +33,10 @@ async function main() {
     analysisMap = typeof analysisMapRaw === 'string' ? JSON.parse(analysisMapRaw) : analysisMapRaw;
   }
   
-  let unanalyzed = items.filter(i => !analysisMap[i.id]);
+  let unanalyzed = items.filter(i => {
+    const existing = analysisMap[i.id];
+    return !existing || !existing.provenance || existing.provenance.status === 'mock';
+  });
   console.log(`${unanalyzed.length} items remain to be analyzed by Gemini.`);
   
   const batchSize = 3;
