@@ -99,7 +99,7 @@ function deterministicMockAnalysis(item: SourceItem): AnalysisResult {
         userIntent = 'discover_by_context';
         repetitiveListeningSignal = true;
         unmetNeed = 'Ability to exclude utility listening from permanent taste profile.';
-        reasoning = 'User frequently mentions background/utility listening (sleep/study) ruining their main recommendations.';
+        reasoning = `The user's mention of utility/background listening (${utilityWords.find(w => text.includes(w)) || 'sleep/focus'}) indicates their algorithm is being permanently skewed by non-active listening sessions.`;
         break;
       case 'novelty':
         primaryTopic = 'Discover Weekly Fatigue';
@@ -108,7 +108,7 @@ function deterministicMockAnalysis(item: SourceItem): AnalysisResult {
         userIntent = 'diversify_taste';
         repetitiveListeningSignal = true;
         unmetNeed = 'A mechanism to force-refresh or hard-reset the discovery algorithm.';
-        reasoning = 'Explicit frustration with repeating tracks in surfaces intended for new discovery.';
+        reasoning = `Explicit frustration with repeating tracks (keywords like "${noveltyWords.find(w => text.includes(w)) || 'repetitive'}") in discovery surfaces intended for new music.`;
         break;
       case 'mood':
         primaryTopic = 'Contextual Playlists';
@@ -116,7 +116,7 @@ function deterministicMockAnalysis(item: SourceItem): AnalysisResult {
         likelySegment = 'mood_based_listener';
         userIntent = 'stay_in_current_mood';
         unmetNeed = 'Stricter boundary controls for mood-based algorithmic playlists.';
-        reasoning = 'User expects the algorithm to respect temporal moods or activity-based contexts (e.g. gym, relaxing).';
+        reasoning = `User expects the algorithm to respect temporal moods or activity contexts (e.g. ${moodWords.find(w => text.includes(w)) || 'gym/vibe'}). Recommendations are currently breaking this boundary.`;
         break;
       case 'niche':
         primaryTopic = 'Language & Niche Bubbles';
@@ -124,7 +124,7 @@ function deterministicMockAnalysis(item: SourceItem): AnalysisResult {
         likelySegment = 'bilingual_listener';
         userIntent = 'regain_control';
         unmetNeed = 'Better cross-pollination between niche/foreign genres and mainstream tastes.';
-        reasoning = 'Listening to specific foreign or niche genres traps the user in a localized filter bubble.';
+        reasoning = `Listening to specific niche genres (${nicheWords.find(w => text.includes(w)) || 'foreign language'}) is trapping the user in a localized filter bubble with high repetition.`;
         break;
       case 'mainstream':
         primaryTopic = 'Mainstream Bias';
@@ -132,7 +132,7 @@ function deterministicMockAnalysis(item: SourceItem): AnalysisResult {
         likelySegment = 'active_music_explorer';
         userIntent = 'avoid_bad_recommendations';
         unmetNeed = 'Adjustable weights to favor obscure/indie artists over top 40 hits in radio.';
-        reasoning = 'User is annoyed that algorithmic radio constantly gravitates toward massive pop stars regardless of the seed track.';
+        reasoning = `User is annoyed that algorithmic radio constantly gravitates toward massive pop hits (${mainstreamWords.find(w => text.includes(w)) || 'mainstream'}) regardless of the seed track.`;
         break;
       case 'curation':
         primaryTopic = 'Playlist Curation Friction';
@@ -140,7 +140,7 @@ function deterministicMockAnalysis(item: SourceItem): AnalysisResult {
         likelySegment = 'playlist_dependent_listener';
         userIntent = 'regain_control';
         unmetNeed = 'Opt-out features for Smart Shuffle and automated playlist injections.';
-        reasoning = 'Strong negative sentiment toward automated features altering manually curated playlists.';
+        reasoning = `Strong negative sentiment toward automated features (${curationWords.find(w => text.includes(w)) || 'smart shuffle'}) altering manually curated playlists.`;
         break;
     }
   } else {
@@ -152,14 +152,14 @@ function deterministicMockAnalysis(item: SourceItem): AnalysisResult {
       userIntent = 'diversify_taste';
       repetitiveListeningSignal = true;
       unmetNeed = 'Gradual introduction of novelty into familiar playlists.';
-      reasoning = 'Long, detailed review without specific keywords often points to a general fatigue with the recommendation engine loop.';
+      reasoning = `Detailed feedback (${text.length} characters) points to a general fatigue with the recommendation engine loop and a desire for gradual novelty.`;
     } else {
       primaryTopic = 'General Discovery Friction';
       discoveryProblemType = 'stale_recommendations';
       likelySegment = 'passive_discovery_user';
       userIntent = 'find_new_music';
       unmetNeed = 'Simple, one-tap ways to steer daily recommendations.';
-      reasoning = 'Short, generic feedback mapped to the largest general passive user segment.';
+      reasoning = `Concise feedback (${text.length} chars) mapped to the largest general passive user segment experiencing stale recommendations.`;
     }
   }
 
