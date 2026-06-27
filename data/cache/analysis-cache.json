@@ -286,5 +286,173 @@
     "unmetNeed": "Reliable application functionality and uninterrupted access to content",
     "confidence": 0.95,
     "reasoning": "The user explicitly states the app is 'great but crashing aways when I open my playlist'. The 'crashing aways' indicates a critical, recurring technical issue that prevents basic app usage and access to their playlists. This represents a loss of user control over the app's fundamental operation. While not a direct discovery problem, the crash prevents any interaction, including discovery. The user's intent is to regain control over the app's stability."
+  },
+  "draft-1782486574949-229_1e54e2c9b48d29d9593663f88925341a435ed560293e9875d6bea694ed125137": {
+    "sourceItemId": "draft-1782486574949-229",
+    "sentiment": "Negative",
+    "primaryTopic": "Ads/Advertising",
+    "secondaryTopics": [
+      "User Control",
+      "Monetization",
+      "User Experience"
+    ],
+    "discoveryProblemType": "weak_user_control",
+    "repetitiveListeningSignal": false,
+    "userIntent": "regain_control",
+    "desiredOutcome": "More control over ad frequency and content, leading to a less intrusive listening experience.",
+    "frustrationSeverity": "Critical",
+    "likelySegment": "routine_listener",
+    "unmetNeed": "Control over the ad experience and a less intrusive listening environment.",
+    "confidence": 0.95,
+    "reasoning": "The user explicitly complains about the high frequency and intrusiveness of ads, stating 'way too greedy and intrusive'. They propose detailed solutions for user control over ad exposure (e.g., watch X ads for X ad-free songs, choose/block ads), indicating a strong desire to regain control over their listening experience. The frustration is high, and the proposed solutions are specific and innovative, suggesting a critical unmet need for a customizable ad experience."
+  },
+  "draft-1782486574949-230_7721650557a7d46d411a867fcb2c59db0cc43501d115179e1e1a7d50eb6cd6e2": {
+    "sourceItemId": "draft-1782486574949-230",
+    "sentiment": "Negative",
+    "primaryTopic": "Repetitive Music/Recommendations",
+    "secondaryTopics": [
+      "Lack of Variety",
+      "Algorithm Issues",
+      "Playlist Experience"
+    ],
+    "discoveryProblemType": "repeat_playlist_dependency",
+    "repetitiveListeningSignal": true,
+    "userIntent": "diversify_taste",
+    "desiredOutcome": "Hear a wider variety of songs from their existing library/playlist",
+    "frustrationSeverity": "High",
+    "likelySegment": "playlist_dependent_listener",
+    "unmetNeed": "Variety and discovery within their own extensive music library",
+    "confidence": 0.95,
+    "reasoning": "The user explicitly states the algorithm 'sucks' because it plays 'the same songs over and over again' despite having a '44 hour playlist' with an 'eclectic mix'. This indicates a strong frustration with repetitive content and a lack of variety, even within their own curated music."
+  },
+  "draft-1782486574960-891_e104c8da94c93be5434ac213a467b322492827f25dfc91110097e963c8b2c54f": {
+    "sourceItemId": "draft-1782486574960-891",
+    "sentiment": "Negative",
+    "primaryTopic": "Unwanted music recommendations",
+    "secondaryTopics": [
+      "genre mismatch",
+      "lack of control",
+      "forced listening"
+    ],
+    "discoveryProblemType": "weak_user_control",
+    "repetitiveListeningSignal": false,
+    "userIntent": "regain_control",
+    "desiredOutcome": "Listen to desired music without unwanted genre intrusion",
+    "frustrationSeverity": "High",
+    "likelySegment": "mood_based_listener",
+    "unmetNeed": "Control over listening experience and accurate genre-based recommendations",
+    "confidence": 0.95,
+    "reasoning": "The user explicitly states they are forced to listen to unwanted genres (dance pop, country, r&b) when they only want to listen to a rock song, indicating a severe lack of control over their listening experience and poor genre matching in recommendations."
+  },
+  "draft-1782486574960-892_d0ad9a57c5e38d509b6ad34e555c0254b88f3f043fffcf6316157d35deccfb7b": {
+    "sourceItemId": "draft-1782486574960-892",
+    "sentiment": "Negative",
+    "primaryTopic": "User Control and App Functionality",
+    "secondaryTopics": [
+      "AI songs",
+      "Playlist management",
+      "Data portability"
+    ],
+    "discoveryProblemType": "weak_user_control",
+    "repetitiveListeningSignal": false,
+    "userIntent": "regain_control",
+    "desiredOutcome": "Greater user control over content, interface, and data portability",
+    "frustrationSeverity": "Critical",
+    "likelySegment": "active_music_explorer",
+    "unmetNeed": "User control over content, interface customization, and data portability",
+    "confidence": 1,
+    "reasoning": "The user explicitly complains about the lack of features to disable AI songs, remove playlists from the main page, and transfer playlists to other apps. This clearly indicates a strong desire for more user control over their listening experience, app interface, and personal data, leading to critical frustration."
+  },
+  "draft-1782486574960-923_445986543e3c7c932e98a6f22a878c23e0e53cefd2cbbeae9aa01000c2a819ca": {
+    "sourceItemId": "draft-1782486574960-923",
+    "sentiment": "Negative",
+    "primaryTopic": "App performance and repetitive recommendations",
+    "secondaryTopics": [
+      "AI DJ issues",
+      "Playback errors",
+      "Technical glitches",
+      "Audio quality issues",
+      "Web player issues"
+    ],
+    "discoveryProblemType": "discover_weekly_repetition",
+    "repetitiveListeningSignal": true,
+    "userIntent": "regain_control",
+    "desiredOutcome": "Reliable app performance and diverse music recommendations",
+    "frustrationSeverity": "Critical",
+    "likelySegment": "routine_listener",
+    "unmetNeed": "Consistent and high-quality music playback experience with fresh, non-repetitive recommendations.",
+    "confidence": 0.95,
+    "reasoning": "The user expresses critical frustration with the app's performance across mobile and web platforms, citing issues like random playback cuts, app restarts, glitches, and distorted audio. A key discovery-related complaint is the AI DJ 'looping the same tracks,' indicating a repetitive listening signal and a 'discover_weekly_repetition' problem. The user's intent is to 'regain control' over their listening experience, which is currently hampered by both technical faults and poor recommendations. They explicitly rule out connection issues, reinforcing the app's fault. The unmet need is for a stable, high-quality, and non-repetitive music experience."
+  },
+  "draft-1782486574961-924_b854b33f2d788bff68830c81c1c92c76abe311c2c3e33d13c9d938e295cfc659": {
+    "sourceItemId": "draft-1782486574961-924",
+    "sentiment": "Negative",
+    "primaryTopic": "Lyrics functionality",
+    "secondaryTopics": [
+      "User experience",
+      "Playback continuity"
+    ],
+    "discoveryProblemType": "weak_user_control",
+    "repetitiveListeningSignal": false,
+    "userIntent": "regain_control",
+    "desiredOutcome": "Lyrics should automatically persist and display for the next song without manual intervention.",
+    "frustrationSeverity": "High",
+    "likelySegment": "routine_listener",
+    "unmetNeed": "The need for seamless and persistent lyrics display across song transitions.",
+    "confidence": 0.95,
+    "reasoning": "The user explicitly states that lyrics do not persist when a new song starts, requiring manual re-opening for each track. This indicates a lack of continuity in the lyrics feature, leading to repeated manual effort and frustration. The user desires the app to maintain the lyrics display state automatically."
+  },
+  "draft-1782486574961-928_0bf5eb78a06823d55cd83e28f66f14809e593a45b1b283685133224a637882a7": {
+    "sourceItemId": "draft-1782486574961-928",
+    "sentiment": "Positive",
+    "primaryTopic": "Content library and usability",
+    "secondaryTopics": [
+      "Song selection",
+      "Playlist management"
+    ],
+    "discoveryProblemType": "stale_recommendations",
+    "repetitiveListeningSignal": false,
+    "userIntent": "stay_in_current_mood",
+    "desiredOutcome": "Enjoying a vast and easily manageable music library",
+    "frustrationSeverity": "Low",
+    "likelySegment": "playlist_dependent_listener",
+    "unmetNeed": "No unmet need identified as the user expresses satisfaction",
+    "confidence": 0.85,
+    "reasoning": "The user expresses strong positive sentiment towards the app's extensive song selection and user-friendly playlist features. No discovery problems or frustrations are indicated. The choice for 'discoveryProblemType' is a placeholder as no problem was identified in this positive review, which is a limitation of the schema for non-problematic feedback. The user's intent to 'stay_in_current_mood' is inferred from the appreciation for 'easy playlists' which facilitate consistent listening experiences."
+  },
+  "draft-1782486574961-949_9b2d9b6589b55f8e9f4da11331b7c0c9806395732a7c903544920fdb7f80a649": {
+    "sourceItemId": "draft-1782486574961-949",
+    "sentiment": "Negative",
+    "primaryTopic": "Unwanted interruptions during playlist listening",
+    "secondaryTopics": [
+      "ads",
+      "recommendations",
+      "lack of control",
+      "poor user experience"
+    ],
+    "discoveryProblemType": "weak_user_control",
+    "repetitiveListeningSignal": false,
+    "userIntent": "regain_control",
+    "desiredOutcome": "Uninterrupted listening to chosen playlists without ads or unwanted recommendations",
+    "frustrationSeverity": "High",
+    "likelySegment": "playlist_dependent_listener",
+    "unmetNeed": "Control over listening experience and uninterrupted access to chosen content",
+    "confidence": 0.9,
+    "reasoning": "The user explicitly states 'more ads than the music itself' and 'can't listen to my playlist without getting 'recommended for you'', indicating a strong negative sentiment and a clear frustration with interruptions and lack of control over their listening experience. They want to listen to their own playlist without interference."
+  },
+  "test1_2e99758548972a8e8822ad47fa1017ff72f06f3ff6a016851f45c398732bc50c": {
+    "sourceItemId": "test1",
+    "sentiment": "Neutral",
+    "primaryTopic": "System testing",
+    "secondaryTopics": [],
+    "discoveryProblemType": "weak_user_control",
+    "repetitiveListeningSignal": false,
+    "userIntent": "regain_control",
+    "desiredOutcome": "System responsiveness and functionality confirmation",
+    "frustrationSeverity": "Low",
+    "likelySegment": "passive_discovery_user",
+    "unmetNeed": "Clear system feedback or confirmation of input processing",
+    "confidence": 0.4,
+    "reasoning": "The review 'this is a test' is extremely generic. The analysis assumes the user is testing the feedback mechanism or system functionality. Sentiment is neutral due to lack of specific emotional language. Discovery problem type and user intent are inferred as a general desire for the system to work as expected or to understand its behavior, hence 'weak_user_control' and 'regain_control' are chosen as broad categories. Desired outcome is system responsiveness. Confidence is low due to the lack of explicit information."
   }
 }
