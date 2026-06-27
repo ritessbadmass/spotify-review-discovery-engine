@@ -39,94 +39,132 @@ export async function analyzeItem(item: SourceItem): Promise<AnalysisResult> {
 function deterministicMockAnalysis(item: SourceItem): AnalysisResult {
   const text = item.normalizedText.toLowerCase();
 
-  // Defaults
+  // Advanced NLP Heuristic Arrays
+  const negativeWords = ['frustrat', 'hate', 'annoy', 'ruin', 'worst', 'stupid', 'dumb', 'useless', 'broken', 'fail', 'suck', 'bad', 'terrible', 'horrible', 'garbage', 'trash', 'disappoint'];
+  const positiveWords = ['love', 'great', 'amazing', 'best', 'awesome', 'perfect', 'favorite', 'good', 'excellent', 'fantastic', 'cool', 'brilliant'];
+  
+  const utilityWords = ['sleep', 'kids', 'white noise', 'baby', 'study', 'focus', 'work', 'background', 'rain', 'lullaby'];
+  const noveltyWords = ['discover weekly', 'over and over', 'exact same', 'tired', 'bored', 'repetitive', 'stale', 'same songs', 'loop', 'refresh', 'new music'];
+  const moodWords = ['mood', 'vibe', 'gym', 'workout', 'party', 'chill', 'relax', 'sad', 'happy', 'energy', 'hype', 'drive', 'driving'];
+  const nicheWords = ['k-pop', 'language', 'spanish', 'anime', 'metal', 'jazz', 'classical', 'indie', 'obscure', 'foreign', 'korean', 'japanese'];
+  const mainstreamWords = ['mainstream', 'drake', 'taylor swift', 'pop hits', 'radio', 'popular', 'charts', 'top 50', 'billboard', 'rap', 'hip hop'];
+  const curationWords = ['smart shuffle', 'ruins the vibe', 'curated', 'my playlist', 'added', 'remove', 'stop adding', 'leave my playlist alone', 'algorithm'];
+
+  // Base state
   let sentiment: Sentiment = 'Neutral';
-  let primaryTopic = 'General Discovery';
+  let severity: Severity = 'Low';
+  
+  // Calculate Sentiment
+  let negScore = negativeWords.filter(w => text.includes(w)).length;
+  let posScore = positiveWords.filter(w => text.includes(w)).length;
+  
+  if (negScore > posScore) {
+    sentiment = 'Negative';
+    severity = negScore > 2 ? 'Critical' : (negScore === 2 ? 'High' : 'Medium');
+  } else if (posScore > negScore) {
+    sentiment = 'Positive';
+  } else if (text.length > 100 && negScore === 0 && posScore === 0) {
+    // Long reviews without strong words are usually constructive criticism (neutral/negative)
+    sentiment = 'Neutral';
+    severity = 'Medium';
+  }
+
+  // Determine Primary Archetype based on matched keywords
+  const scores = {
+    utility: utilityWords.filter(w => text.includes(w)).length,
+    novelty: noveltyWords.filter(w => text.includes(w)).length,
+    mood: moodWords.filter(w => text.includes(w)).length,
+    niche: nicheWords.filter(w => text.includes(w)).length,
+    mainstream: mainstreamWords.filter(w => text.includes(w)).length,
+    curation: curationWords.filter(w => text.includes(w)).length,
+  };
+
+  const maxCategory = Object.keys(scores).reduce((a, b) => scores[a as keyof typeof scores] > scores[b as keyof typeof scores] ? a : b) as keyof typeof scores;
+  
+  // Apply specific logic based on winning category (or fallback to text length heuristics if tied at 0)
+  let primaryTopic = 'Algorithmic Discovery';
   let discoveryProblemType: DiscoveryProblemType = 'stale_recommendations';
-  let likelySegment: LikelySegment = 'active_music_explorer';
+  let likelySegment: LikelySegment = 'passive_discovery_user';
   let userIntent: UserIntent = 'find_new_music';
   let repetitiveListeningSignal = false;
-  let severity: Severity = 'Low';
-  let reasoning = 'Default classification applied due to lack of specific keyword matches.';
+  let unmetNeed = 'More transparent algorithm controls';
+  let reasoning = 'Generated via Advanced Local NLP Heuristics.';
 
-  // Heuristics
-  
-  if (text.includes('frustrat') || text.includes('hate') || text.includes('annoy') || text.includes('ruin') || text.includes('worst')) {
-    sentiment = 'Negative';
-    severity = 'High';
-  } else if (text.includes('love') || text.includes('great') || text.includes('amazing')) {
-    sentiment = 'Positive';
-  }
-
-  if (text.includes('sleep') || text.includes('kids') || text.includes('white noise') || text.includes('baby')) {
-    primaryTopic = 'Taste Profile Utility';
-    discoveryProblemType = 'mood_context_mismatch';
-    likelySegment = 'utility_background_listener';
-    userIntent = 'discover_by_context';
-    repetitiveListeningSignal = true;
-    severity = 'Critical';
-    reasoning = 'Mention of utility audio (sleep/baby) implies the user wants context-aware profiles that do not permanently distort recommendations.';
-  } 
-  else if (text.includes('discover weekly') || text.includes('over and over') || text.includes('exact same')) {
-    primaryTopic = 'Discover Weekly Algorithm';
-    discoveryProblemType = 'novelty_deficit';
-    likelySegment = 'active_music_explorer';
-    userIntent = 'diversify_taste';
-    repetitiveListeningSignal = true;
-    severity = 'High';
-    reasoning = 'The user explicitly references repetition within discovery surfaces, suggesting an algorithmic loop and lack of novelty.';
-  }
-  else if (text.includes('mood') || text.includes('vibe') || text.includes('gym') || text.includes('workout')) {
-    primaryTopic = 'Contextual Playlists';
-    discoveryProblemType = 'mood_context_mismatch';
-    likelySegment = 'mood_based_listener';
-    userIntent = 'stay_in_current_mood';
-    reasoning = 'User mentions specific activities or moods (gym/vibe), indicating frustration when recommendations break that context.';
-  }
-  else if (text.includes('k-pop') || text.includes('language') || text.includes('spanish')) {
-    primaryTopic = 'Language Bubbles';
-    discoveryProblemType = 'genre_mismatch';
-    likelySegment = 'niche_genre_seeker';
-    userIntent = 'regain_control';
-    reasoning = 'Mentioning specific foreign genres/languages often leads to rigid genre or language loops due to rigid algorithmic tagging.';
-  }
-  else if (text.includes('mainstream') || text.includes('drake') || text.includes('taylor swift') || text.includes('pop hits')) {
-    primaryTopic = 'Mainstream Bias';
-    discoveryProblemType = 'weak_long_tail_exploration';
-    likelySegment = 'niche_genre_seeker';
-    userIntent = 'find_new_music';
-    reasoning = 'User is complaining about the algorithm converging to highly popular artists regardless of seed track (weak long-tail exploration).';
-  }
-  else if (text.includes('radio') || text.includes('podcast')) {
-    primaryTopic = 'Radio/Feed Mixing';
-    discoveryProblemType = 'discovery_control_friction';
-    likelySegment = 'passive_routine_listener';
-    userIntent = 'avoid_bad_recommendations';
-    repetitiveListeningSignal = true;
-    reasoning = 'Mixing podcasts with music or playing heavy rotation on radio stations shows friction in discovery control.';
-  }
-  else if (text.includes('on repeat') || text.includes('bubble') || text.includes('liked songs')) {
-    primaryTopic = 'Filter Bubble';
-    discoveryProblemType = 'weak_long_tail_exploration';
-    likelySegment = 'passive_routine_listener';
-    userIntent = 'diversify_taste';
-    repetitiveListeningSignal = true;
-    reasoning = 'Explicitly feeling trapped in a bubble or relying entirely on Liked Songs shows a breakdown in passive discovery mechanisms.';
-  }
-  else if (text.includes('smart shuffle') || text.includes('ruins the vibe') || text.includes('curated')) {
-    primaryTopic = 'Playlist Curation';
-    discoveryProblemType = 'playlist_contamination';
-    likelySegment = 'playlist_curator';
-    userIntent = 'stay_in_current_mood';
-    reasoning = 'Smart Shuffle adds unwanted tracks, contaminating a carefully curated user playlist.';
-  }
-  else {
-    likelySegment = 'low_confidence';
-    discoveryProblemType = 'novelty_deficit';
+  if (scores[maxCategory] > 0) {
+    switch (maxCategory) {
+      case 'utility':
+        primaryTopic = 'Taste Profile Contamination';
+        discoveryProblemType = 'mood_context_mismatch';
+        likelySegment = 'routine_listener';
+        userIntent = 'discover_by_context';
+        repetitiveListeningSignal = true;
+        unmetNeed = 'Ability to exclude utility listening from permanent taste profile.';
+        reasoning = 'User frequently mentions background/utility listening (sleep/study) ruining their main recommendations.';
+        break;
+      case 'novelty':
+        primaryTopic = 'Discover Weekly Fatigue';
+        discoveryProblemType = 'discover_weekly_repetition';
+        likelySegment = 'active_music_explorer';
+        userIntent = 'diversify_taste';
+        repetitiveListeningSignal = true;
+        unmetNeed = 'A mechanism to force-refresh or hard-reset the discovery algorithm.';
+        reasoning = 'Explicit frustration with repeating tracks in surfaces intended for new discovery.';
+        break;
+      case 'mood':
+        primaryTopic = 'Contextual Playlists';
+        discoveryProblemType = 'mood_context_mismatch';
+        likelySegment = 'mood_based_listener';
+        userIntent = 'stay_in_current_mood';
+        unmetNeed = 'Stricter boundary controls for mood-based algorithmic playlists.';
+        reasoning = 'User expects the algorithm to respect temporal moods or activity-based contexts (e.g. gym, relaxing).';
+        break;
+      case 'niche':
+        primaryTopic = 'Language & Niche Bubbles';
+        discoveryProblemType = 'same_artist_loop';
+        likelySegment = 'bilingual_listener';
+        userIntent = 'regain_control';
+        unmetNeed = 'Better cross-pollination between niche/foreign genres and mainstream tastes.';
+        reasoning = 'Listening to specific foreign or niche genres traps the user in a localized filter bubble.';
+        break;
+      case 'mainstream':
+        primaryTopic = 'Mainstream Bias';
+        discoveryProblemType = 'weak_long_tail_exploration';
+        likelySegment = 'active_music_explorer';
+        userIntent = 'avoid_bad_recommendations';
+        unmetNeed = 'Adjustable weights to favor obscure/indie artists over top 40 hits in radio.';
+        reasoning = 'User is annoyed that algorithmic radio constantly gravitates toward massive pop stars regardless of the seed track.';
+        break;
+      case 'curation':
+        primaryTopic = 'Playlist Curation Friction';
+        discoveryProblemType = 'weak_user_control';
+        likelySegment = 'playlist_dependent_listener';
+        userIntent = 'regain_control';
+        unmetNeed = 'Opt-out features for Smart Shuffle and automated playlist injections.';
+        reasoning = 'Strong negative sentiment toward automated features altering manually curated playlists.';
+        break;
+    }
+  } else {
+    // Tie-breaker for 0 score: use text length to simulate different segments
+    if (text.length > 150) {
+      primaryTopic = 'Recommendation Monotony';
+      discoveryProblemType = 'repeat_playlist_dependency';
+      likelySegment = 'repeat_playlist_listener';
+      userIntent = 'diversify_taste';
+      repetitiveListeningSignal = true;
+      unmetNeed = 'Gradual introduction of novelty into familiar playlists.';
+      reasoning = 'Long, detailed review without specific keywords often points to a general fatigue with the recommendation engine loop.';
+    } else {
+      primaryTopic = 'General Discovery Friction';
+      discoveryProblemType = 'stale_recommendations';
+      likelySegment = 'passive_discovery_user';
+      userIntent = 'find_new_music';
+      unmetNeed = 'Simple, one-tap ways to steer daily recommendations.';
+      reasoning = 'Short, generic feedback mapped to the largest general passive user segment.';
+    }
   }
 
-  // Generate mock confidence between 0.75 and 0.98
-  const confidence = 0.75 + (Math.random() * 0.23);
+  // Generate deterministic mock confidence between 0.85 and 0.99 based on text length
+  const confidence = Math.min(0.99, 0.85 + (text.length / 1000));
 
   return {
     sourceItemId: item.id,
@@ -139,7 +177,7 @@ function deterministicMockAnalysis(item: SourceItem): AnalysisResult {
     desiredOutcome: 'Improved recommendation logic without manual curation',
     frustrationSeverity: severity,
     likelySegment,
-    unmetNeed: 'Contextual awareness and taste boundary controls',
+    unmetNeed,
     confidence,
     reasoning
   };
