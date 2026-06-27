@@ -22,7 +22,7 @@ export async function GET() {
       const rawText = row.rawText || row.text || row.review || '';
       const normalizedText = cleanText(rawText);
       return {
-        id: `draft-${Date.now()}-${idx}`,
+        id: `draft-review-${idx}`,
         sourceType: (row.sourceType as SourceType) || 'play_store',
         sourceUrl: row.sourceUrl || '',
         author: row.author || 'Anonymous',

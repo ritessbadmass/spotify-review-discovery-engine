@@ -454,5 +454,196 @@
     "unmetNeed": "Clear system feedback or confirmation of input processing",
     "confidence": 0.4,
     "reasoning": "The review 'this is a test' is extremely generic. The analysis assumes the user is testing the feedback mechanism or system functionality. Sentiment is neutral due to lack of specific emotional language. Discovery problem type and user intent are inferred as a general desire for the system to work as expected or to understand its behavior, hence 'weak_user_control' and 'regain_control' are chosen as broad categories. Desired outcome is system responsiveness. Confidence is low due to the lack of explicit information."
+  },
+  "draft-1782559739153-0_8ed592d60ec5e2892b3306b5e190185df1d75fbc86388007465435d35379fa65": {
+    "sourceItemId": "draft-1782559739153-0",
+    "sentiment": "Negative",
+    "primaryTopic": "User Control",
+    "secondaryTopics": [
+      "Ads",
+      "Premium features"
+    ],
+    "discoveryProblemType": "weak_user_control",
+    "repetitiveListeningSignal": false,
+    "userIntent": "regain_control",
+    "desiredOutcome": "Full control over playlist playback without ads or payment",
+    "frustrationSeverity": "High",
+    "likelySegment": "playlist_dependent_listener",
+    "unmetNeed": "Control over personal music library/playlists and an ad-free experience for basic functionality",
+    "confidence": 1,
+    "reasoning": "The user explicitly states frustration with not being able to choose songs from their playlist and mentions 'too many adds' (ads) as a barrier, indicating a lack of basic playback control without a premium subscription. This directly points to 'weak_user_control' and a desire to 'regain_control'."
+  },
+  "draft-1782559739154-1_ea4ed556c54a7b9bc4b2a4916815b500a4dc4c6de4f705f292aecf044d36d417": {
+    "sourceItemId": "draft-1782559739154-1",
+    "sentiment": "Negative",
+    "primaryTopic": "Ads and free tier limitations",
+    "secondaryTopics": [
+      "Unwanted recommendations",
+      "Lack of user control",
+      "Feature access"
+    ],
+    "discoveryProblemType": "weak_user_control",
+    "repetitiveListeningSignal": false,
+    "userIntent": "regain_control",
+    "desiredOutcome": "Ad-free listening experience with full control over playlist content",
+    "frustrationSeverity": "High",
+    "likelySegment": "playlist_dependent_listener",
+    "unmetNeed": "Uninterrupted and controlled listening experience for personal playlists without forced recommendations or excessive ads on the free tier.",
+    "confidence": 0.95,
+    "reasoning": "The user explicitly states frustration with ads popping up frequently and the platform adding its own songs to their playlist, calling it a 'smart filter,' which indicates a strong desire for control over their listening experience. The statement 'I will use a offline music player than keep using this' signifies high frustration and intent to churn. The primary issue is the lack of control and intrusive ads on the free tier, preventing them from enjoying their own playlists."
+  },
+  "draft-1782559739154-2_8cdea30a6bde9bab5f3e8b06fb8c4bb22ce0d9ed6f1979503c11577adc097d99": {
+    "sourceItemId": "draft-1782559739154-2",
+    "sentiment": "Negative",
+    "primaryTopic": "User Control",
+    "secondaryTopics": [
+      "Playlist editing",
+      "Undo functionality",
+      "Accidental actions"
+    ],
+    "discoveryProblemType": "weak_user_control",
+    "repetitiveListeningSignal": false,
+    "userIntent": "regain_control",
+    "desiredOutcome": "An undo/cancel option for playlist edits to prevent accidental changes",
+    "frustrationSeverity": "High",
+    "likelySegment": "routine_listener",
+    "unmetNeed": "The need for an undo mechanism or a clear way to confirm/cancel actions during playlist editing to prevent irreversible accidental changes.",
+    "confidence": 1,
+    "reasoning": "The user explicitly states the lack of a 'CANCEL' or 'Done' button when adding a song to a playlist, leading to an inability to undo accidental edits. This indicates a clear frustration with weak user control over playlist management actions, specifically the inability to revert unintended changes."
+  },
+  "draft-1782559739154-3_434278f3ed2e00fa63e0edefea8ebc56255ed2f5ef32e77f3abb25ec9946bed6": {
+    "sourceItemId": "draft-1782559739154-3",
+    "sentiment": "Negative",
+    "primaryTopic": "Lack of user control in free version",
+    "secondaryTopics": [
+      "Song selection limitations",
+      "Playlist functionality",
+      "Premium benefits"
+    ],
+    "discoveryProblemType": "weak_user_control",
+    "repetitiveListeningSignal": false,
+    "userIntent": "regain_control",
+    "desiredOutcome": "Full control over music selection and playback",
+    "frustrationSeverity": "High",
+    "likelySegment": "routine_listener",
+    "unmetNeed": "Autonomy and control over music playback",
+    "confidence": 1,
+    "reasoning": "The user explicitly states frustration with the free version's limitations, specifically the inability to choose specific songs and the limited skips. Phrases like 'way too limited' and 'Shouldn't it be us who choose the music?' clearly indicate a strong desire for more control over their listening experience, pointing to a 'weak_user_control' problem and 'High' frustration. They imply that premium offers a better experience, highlighting the unmet need for autonomy."
+  },
+  "draft-1782559739154-4_51db9daa95315cf6980c78e5f895d62224200692fc82ec2fdbf749c27735fb2f": {
+    "sourceItemId": "draft-1782559739154-4",
+    "sentiment": "Negative",
+    "primaryTopic": "App Performance",
+    "secondaryTopics": [
+      "Bugs",
+      "Slowness",
+      "Loading Issues",
+      "Playback Issues",
+      "Playlist Management",
+      "Search Functionality",
+      "Security (2FA)"
+    ],
+    "discoveryProblemType": "weak_user_control",
+    "repetitiveListeningSignal": false,
+    "userIntent": "regain_control",
+    "desiredOutcome": "A functional, fast, and reliable app experience with working features and enhanced security (2FA)",
+    "frustrationSeverity": "Critical",
+    "likelySegment": "routine_listener",
+    "unmetNeed": "Reliable and performant application functionality; basic app features (playback, search, playlist management) to work as expected; enhanced security (2FA)",
+    "confidence": 0.95,
+    "reasoning": "The user explicitly details multiple critical app performance issues, including slowness, bugs, broken loading, playback, queue/playlist management, and search functionality, leading to a severely degraded user experience. They also mention a desire for 2FA. The inability to perform basic actions indicates a lack of user control over the application."
+  },
+  "draft-1782559739154-5_475bea8f52f0442df4823a54ae377dee44ac340bd5f82ea48c4e920a70147987": {
+    "sourceItemId": "draft-1782559739154-5",
+    "sentiment": "Negative",
+    "primaryTopic": "Podcast Playback Issue",
+    "secondaryTopics": [
+      "App Crashing",
+      "Playlist Management",
+      "Troubleshooting"
+    ],
+    "discoveryProblemType": "poor_context_awareness",
+    "repetitiveListeningSignal": false,
+    "userIntent": "avoid_bad_recommendations",
+    "desiredOutcome": "Consistent and stable playback of selected podcast content without unexpected switches or app crashes.",
+    "frustrationSeverity": "High",
+    "likelySegment": "playlist_dependent_listener",
+    "unmetNeed": "Reliable and predictable playback of curated content without unexpected interruptions or app crashes.",
+    "confidence": 0.95,
+    "reasoning": "The user describes a critical bug where a playlist containing a single podcast unexpectedly switches to a different podcast, causing the app to crash instantly. This indicates a failure in the app's ability to maintain context within a user-defined playlist, leading to severe app instability. The user's attempts at troubleshooting highlight the severity of the issue."
+  },
+  "draft-1782559739154-6_3330cb9401dcdccb2e1064a583202b443d6de61110eae6ff1111d175fa720ff5": {
+    "sourceItemId": "draft-1782559739154-6",
+    "sentiment": "Negative",
+    "primaryTopic": "Unwanted songs in playlist",
+    "secondaryTopics": [
+      "Limited skips",
+      "Lack of control"
+    ],
+    "discoveryProblemType": "weak_user_control",
+    "repetitiveListeningSignal": false,
+    "userIntent": "regain_control",
+    "desiredOutcome": "App should not automatically add songs to personal playlists and/or provide more skips.",
+    "frustrationSeverity": "Medium",
+    "likelySegment": "playlist_dependent_listener",
+    "unmetNeed": "Control over personal playlists and listening experience.",
+    "confidence": 0.9,
+    "reasoning": "The user is frustrated by the app automatically adding songs to their playlist and the limitation of only 6 skips, indicating a clear lack of control over their curated music experience."
+  },
+  "draft-1782559739154-10_8cdecba024cfcb9ff74cda4540c7c02635870a9dac931cab464d298899614bab": {
+    "sourceItemId": "draft-1782559739154-10",
+    "sentiment": "Negative",
+    "primaryTopic": "Playlist UI change",
+    "secondaryTopics": [
+      "User experience",
+      "Product design decisions"
+    ],
+    "discoveryProblemType": "weak_user_control",
+    "repetitiveListeningSignal": false,
+    "userIntent": "regain_control",
+    "desiredOutcome": "A user interface that is intuitive and reflects user preferences, or reversal of the unwanted UI change.",
+    "frustrationSeverity": "Critical",
+    "likelySegment": "routine_listener",
+    "unmetNeed": "Product stability and user-centric design decisions",
+    "confidence": 0.9,
+    "reasoning": "The user expresses strong negative sentiment and frustration regarding a recent UI change, specifically to playlists. The sarcastic and aggressive language indicates a critical level of frustration and a feeling that the change was unnecessary and poorly conceived, implying a lack of user input or consideration in product design decisions. This points to an unmet need for product stability and user-centric design, and a desire to regain control over their user experience."
+  },
+  "draft-1782567361140-0_8ed592d60ec5e2892b3306b5e190185df1d75fbc86388007465435d35379fa65": {
+    "sourceItemId": "draft-1782567361140-0",
+    "sentiment": "Negative",
+    "primaryTopic": "User Control",
+    "secondaryTopics": [
+      "Ads",
+      "Premium Features",
+      "Playlist Management"
+    ],
+    "discoveryProblemType": "weak_user_control",
+    "repetitiveListeningSignal": false,
+    "userIntent": "regain_control",
+    "desiredOutcome": "Ability to select specific songs from their playlist without ads or payment",
+    "frustrationSeverity": "High",
+    "likelySegment": "playlist_dependent_listener",
+    "unmetNeed": "Control over playback and an ad-free experience for owned content",
+    "confidence": 1,
+    "reasoning": "The user explicitly states 'lemme choose which song to play from my playlist without paying tooo many adds', directly indicating a lack of control over their own content and frustration with ads/payment barriers."
+  },
+  "draft-1782567361140-1_ea4ed556c54a7b9bc4b2a4916815b500a4dc4c6de4f705f292aecf044d36d417": {
+    "sourceItemId": "draft-1782567361140-1",
+    "sentiment": "Negative",
+    "primaryTopic": "Ads and Premium features",
+    "secondaryTopics": [
+      "Unwanted recommendations",
+      "Lack of control",
+      "Free tier limitations"
+    ],
+    "discoveryProblemType": "weak_user_control",
+    "repetitiveListeningSignal": false,
+    "userIntent": "regain_control",
+    "desiredOutcome": "Ad-free listening and control over playlist content",
+    "frustrationSeverity": "High",
+    "likelySegment": "routine_listener",
+    "unmetNeed": "Uninterrupted and personalized listening experience without forced content",
+    "confidence": 0.9,
+    "reasoning": "The user is highly frustrated with ads interrupting their listening experience and the application adding its own songs to their playlist, which they perceive as a lack of control and a poor 'smart filter'. They explicitly state they would rather use an offline player, indicating a critical level of dissatisfaction with the free tier's limitations and forced content."
   }
 }
