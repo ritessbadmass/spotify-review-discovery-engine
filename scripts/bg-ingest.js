@@ -38,8 +38,13 @@ async function main() {
   
   const batchSize = 3;
   let saveCounter = 0;
+  let consecutiveRateLimits = 0;
 
   for (let i = 0; i < unanalyzed.length; i += batchSize) {
+    if (consecutiveRateLimits >= 3) {
+      console.log('Daily Rate Limit likely reached (multiple consecutive mock fallbacks). Halting script. Please run again tomorrow!');
+      break;
+    }
     const batch = unanalyzed.slice(i, i + batchSize);
     console.log(`Processing batch ${Math.floor(i / batchSize) + 1} / ${Math.ceil(unanalyzed.length / batchSize)}`);
     
@@ -52,14 +57,21 @@ async function main() {
       
       if (res.ok) {
         const body = await res.json();
+        let anyLive = false;
         for (const result of body.results) {
            // Only keep live results to ensure quality
            if (result.provenance && result.provenance.status === 'live') {
              analysisMap[result.sourceItemId] = result;
+             anyLive = true;
            } else {
-             // If rate limit hit and it fell back to mock, don't save it so it retries later
              console.log(`Rate limit warning for item ${result.sourceItemId}. Will retry next run.`);
            }
+        }
+        
+        if (anyLive) {
+          consecutiveRateLimits = 0;
+        } else {
+          consecutiveRateLimits++;
         }
         
         saveCounter++;
@@ -75,8 +87,8 @@ async function main() {
       console.error('Error processing batch:', e.message);
     }
     
-    // Strict delay to respect 15 RPM limits on free tier
-    await delay(3000); 
+    // Strict delay to respect 15 RPM limits on free tier (12s total per batch approx ensures we stay under 15 RPM)
+    await delay(12000); 
   }
   
   // Final save

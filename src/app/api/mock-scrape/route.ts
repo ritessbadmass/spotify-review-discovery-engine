@@ -15,10 +15,8 @@ export async function GET() {
       skipEmptyLines: true
     });
 
-    const rows = results.data as any[];
-    
-    // Only return 100 items to avoid Gemini Free Tier 1500 RPD limit
-    const items = rows.slice(0, 100).map((row, idx) => {
+    // Return the full dataset for the multi-day background processing approach
+    const items = rows.map((row, idx) => {
       const rawText = row.rawText || row.text || row.review || '';
       const normalizedText = cleanText(rawText);
       return {
