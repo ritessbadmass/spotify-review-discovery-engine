@@ -285,18 +285,29 @@ export async function bulkIngest(newItems: SourceItem[], onProgress?: (done: num
     const analysisMap = await getStoredAnalysis();
     
     // Process in batches
-    const batchSize = 3;
+    const batchSize = process.env.NEXT_PUBLIC_ANALYSIS_MODE === 'live' ? 3 : 50;
+    
     for (let i = 0; i < newItems.length; i += batchSize) {
       if (onProgress) onProgress(i, newItems.length);
       const batch = newItems.slice(i, i + batchSize);
+      
       const results = await processBatchAPI(batch);
       for (const res of results) {
         analysisMap[res.sourceItemId] = res;
       }
-      if (i + batchSize < newItems.length) await delay(1000);
+      
+      // Delay to avoid UI freeze and rate limits (only in live mode)
+      if (process.env.NEXT_PUBLIC_ANALYSIS_MODE === 'live') {
+        await delay(3000);
+      }
+      
+      // Incremental save every 300 items so we don't lose data on refresh
+      if (i > 0 && i % 300 === 0) {
+        await saveStoredAnalysis(analysisMap);
+      }
     }
-    if (onProgress) onProgress(newItems.length, newItems.length);
     
+    if (onProgress) onProgress(newItems.length, newItems.length);
     await saveStoredAnalysis(analysisMap);
   }
 }
