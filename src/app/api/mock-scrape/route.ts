@@ -15,6 +15,8 @@ export async function GET() {
       skipEmptyLines: true
     });
 
+    const rows = results.data as any[];
+
     // Return the full dataset for the multi-day background processing approach
     const items = rows.map((row, idx) => {
       const rawText = row.rawText || row.text || row.review || '';
