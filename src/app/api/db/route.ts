@@ -15,8 +15,16 @@ export async function GET(request: Request) {
   }
 
   try {
-    const items = await redis.get('spotify_mock_items');
-    const analysis = await redis.get('spotify_mock_analysis');
+    let items = await redis.get('spotify_mock_items');
+    let analysis = await redis.get('spotify_mock_analysis');
+    
+    // Defensive: handle double-encoded JSON strings from Redis
+    if (typeof items === 'string') {
+      try { items = JSON.parse(items); } catch (e) { /* already a plain string, leave as-is */ }
+    }
+    if (typeof analysis === 'string') {
+      try { analysis = JSON.parse(analysis); } catch (e) { /* already a plain string, leave as-is */ }
+    }
     
     return NextResponse.json({ 
       items: items || null, 
